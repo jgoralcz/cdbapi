@@ -1,7 +1,10 @@
 package routes
 
 import (
+	"log"
+
 	"github.com/gorilla/mux"
+	"github.com/jgoralcz/go_cdbapi/src/db"
 	"github.com/jgoralcz/go_cdbapi/src/helpers"
 	"github.com/jgoralcz/go_cdbapi/src/middleware"
 	"github.com/jgoralcz/go_cdbapi/src/routes/waifus"
@@ -15,6 +18,7 @@ func Routes() *negroni.Negroni {
 
 	n := negroni.New()
 
+	// error middleware
 	recovery := negroni.NewRecovery()
 	env := helpers.GetEnvOrDefault("ENV", "LOCAL")
 	if env != "LOCAL" {
@@ -24,6 +28,9 @@ func Routes() *negroni.Negroni {
 	n.Use(recovery)
 	n.Use(negroni.HandlerFunc(middleware.LoggingMiddleware))
 	n.UseHandler(router)
+
+	test := db.GetRandomCharacter(5)
+	log.Printf(test)
 
 	return n
 }
