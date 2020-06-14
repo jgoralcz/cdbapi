@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// MarshalJSONFile takes in a filename path and struct reference to
+// parse out the contents of the json file into the struct.
 func MarshalJSONFile (filename string, structRef interface{}) []byte {
 	plan, _ := ioutil.ReadFile(filename)
 	err := json.Unmarshal(plan, structRef)

@@ -1,20 +1,18 @@
 package routes
 
 import (
-	"log"
-
 	"github.com/gorilla/mux"
-	"github.com/jgoralcz/go_cdbapi/src/db"
 	"github.com/jgoralcz/go_cdbapi/src/helpers"
 	"github.com/jgoralcz/go_cdbapi/src/middleware"
-	"github.com/jgoralcz/go_cdbapi/src/routes/waifus"
 	"github.com/urfave/negroni"
 )
 
+// Routes is a function that binds with http to handle particular routes
 func Routes() *negroni.Negroni {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/characters", waifus.Handler).Methods("GET")
+	router.HandleFunc("/characters", CharacterHandler).Methods("GET")
+	router.HandleFunc("/characters/random", CharacterRandomHandler).Methods("GET")
 
 	n := negroni.New()
 
@@ -28,9 +26,6 @@ func Routes() *negroni.Negroni {
 	n.Use(recovery)
 	n.Use(negroni.HandlerFunc(middleware.LoggingMiddleware))
 	n.UseHandler(router)
-
-	test := db.GetRandomCharacter(5)
-	log.Printf(test)
 
 	return n
 }
