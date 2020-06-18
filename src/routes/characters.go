@@ -1,14 +1,72 @@
 package routes
 
 import (
-	"log"
 	"net/http"
+	"strconv"
 
-	"github.com/jgoralcz/go_cdbapi/src/db"
+	"github.com/gorilla/mux"
+	"github.com/jgoralcz/go_cdbapi/src/db/characters"
 	"github.com/jgoralcz/go_cdbapi/src/helpers"
 )
 
+func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	strID := params["id"]
+
+	id, err := strconv.Atoi(strID)
+
+	if err != nil {
+		w.WriteHeader(400)
+		w.Write([]byte(`{ "error": "Must have a valid id parameter"}`))
+		return
+	}
+
+	json := characters.GetCharacterByID(id)
+
+	if string(json) == "[]" {
+		w.WriteHeader(404)
+		w.Write([]byte("{ \"error\": \"Could not find a character with id " + strID + "\"}"))
+		return
+	}
+
+	if json == nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	w.WriteHeader(200)
+	w.Write(json)
+}
+
 func CharacterHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+
+	initLimit := query.Get("limit")
+	nsfw := query.Get("nsfw")
+	western := query.Get("western")
+	game := query.Get("game")
+	name := query.Get("name")
+
+	limit := helpers.MaxLimit(initLimit, 1, 20)
+	isNSFW := helpers.DefaultBoolean(nsfw)
+	isWestern := helpers.DefaultBoolean(western)
+	isGame := helpers.DefaultBoolean(game)
+
+	if name == "" {
+		w.WriteHeader(400)
+		w.Write([]byte(`{ "error": "Must have a valid name query parameter"}`))
+		return
+	}
+
+	json := characters.SearchCharacter(name, limit, isNSFW, isWestern, isGame)
+
+	if json == nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	w.WriteHeader(200)
+	w.Write(json)
 }
 
 func CharacterRandomHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,10 +78,17 @@ func CharacterRandomHandler(w http.ResponseWriter, r *http.Request) {
 	game := query.Get("game")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
+	isNSFW := helpers.DefaultBoolean(nsfw)
+	isWestern := helpers.DefaultBoolean(western)
+	isGame := helpers.DefaultBoolean(game)
 
-	json := db.GetRandomCharacter(limit, nsfw, western, game)
+	json := characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
 
-	log.Println(json)
+	if json == nil {
+		w.WriteHeader(500)
+		return
+	}
 
+	w.WriteHeader(200)
 	w.Write(json)
 }

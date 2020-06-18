@@ -14,11 +14,11 @@ import (
 )
 
 func init() {
-	LOG_FILE_LOCATION := os.Getenv("LOG_FILE_LOCATION")
+	LogFileLocation := os.Getenv("LOG_FILE_LOCATION")
 
-	if LOG_FILE_LOCATION != "" {
+	if LogFileLocation != "" {
 		log.SetOutput(&lumberjack.Logger{
-			Filename:   LOG_FILE_LOCATION,
+			Filename:   LogFileLocation,
 			MaxSize:    500, // megabytes
 			MaxBackups: 3,
 			MaxAge:     28,   //days
@@ -40,7 +40,9 @@ func cleanRequestStr(str []byte, err interface{}) string {
 	return updatedStr
 }
 
-func LoggingMiddleware(rw http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+// Logging takes in a request and logs information on it. Such information includes:
+// the User-Agent, Url, Host, Uri, Method, Status Code, Query, Body, Response Time, Content-Type, and Content-Length
+func Logging(rw http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	current := time.Now()
 
 	tempQueryStr, err := json.Marshal(req.URL.Query())
