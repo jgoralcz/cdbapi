@@ -9,6 +9,8 @@ import (
 	"github.com/jgoralcz/go_cdbapi/src/helpers"
 )
 
+// CharacterByIDHandler handles routes when a user searches by a character ID.
+// Returns 400 if the id is not an int, and returns 404 if the id is not found.
 func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	strID := params["id"]
@@ -38,7 +40,10 @@ func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
-func CharacterHandler(w http.ResponseWriter, r *http.Request) {
+// CharacterNameHandler handles the logic for searching for a character with the
+//  user's specified parameters that act as filters: limit (int), nsfw (true or false),
+// western (true or false), game (true or false)
+func CharacterNameHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
 	initLimit := query.Get("limit")
@@ -69,6 +74,9 @@ func CharacterHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
+// CharacterRandomHandler handles the logic for a random character request with
+// the user's specified parameters that act as filters: limit (int), nsfw (true or false),
+// western (true or false), game (true or false)
 func CharacterRandomHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 

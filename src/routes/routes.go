@@ -14,7 +14,7 @@ func Routes() *negroni.Negroni {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/{characters/random:characters/random\\/?}", CharacterRandomHandler).Methods("GET")
-	router.HandleFunc("/{characters:characters\\/?}", CharacterHandler).Methods("GET")
+	router.HandleFunc("/{characters:characters\\/?}", CharacterNameHandler).Methods("GET")
 	router.HandleFunc("/characters/{id}", CharacterByIDHandler).Methods("GET")
 	router.HandleFunc("/characters/{id}/", CharacterByIDHandler).Methods("GET")
 
