@@ -19,7 +19,7 @@ func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(400)
-		w.Write([]byte(`{ "error": "Must have a valid id parameter"}`))
+		w.Write([]byte(`{ "error": "Must have a valid id parameter" }`))
 		return
 	}
 
@@ -27,7 +27,7 @@ func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 	if string(json) == "[]" {
 		w.WriteHeader(404)
-		w.Write([]byte("{ \"error\": \"Could not find a character with id " + strID + "\"}"))
+		w.Write([]byte("{ \"error\": \"Could not find a character with id " + strID + "\" }"))
 		return
 	}
 
@@ -41,7 +41,7 @@ func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // CharacterNameHandler handles the logic for searching for a character with the
-//  user's specified parameters that act as filters: limit (int), nsfw (true or false),
+// user's specified parameters that act as filters: limit (int), nsfw (true or false),
 // western (true or false), game (true or false)
 func CharacterNameHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
