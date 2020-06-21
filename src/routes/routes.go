@@ -14,15 +14,10 @@ func Routes() *gin.Engine {
 	{
 		characters := v1.Group("/characters")
 		{
-			characters.GET("/random", CharacterRandomHandler)
 			characters.GET(":id", CharacterByIDHandler)
-			characters.GET("", CharacterNameHandler)
+			characters.GET("", CharacterHandler)
 		}
 	}
-
-	// r.GET("/characters/random", CharacterRandomHandler)
-	// r.GET("/characters/search", CharacterNameHandler)
-	// r.GET("/characters/id/:id", CharacterByIDHandler)
 
 	return r
 }

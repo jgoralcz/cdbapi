@@ -37,54 +37,38 @@ func CharacterByIDHandler(c *gin.Context) {
 	c.String(200, json)
 }
 
-// CharacterNameHandler handles the logic for searching for a character with the
+// CharacterHandler handles the logic for searching for a character with the
 // user's specified parameters that act as filters: limit (int), nsfw (true or false),
-// western (true or false), game (true or false)
-func CharacterNameHandler(c *gin.Context) {
+// western (true or false), game (true or false).
+// This route requires that a name or setting random to "true" to work.
+func CharacterHandler(c *gin.Context) {
 	initLimit := c.Query("limit")
 	nsfw := c.Query("nsfw")
 	western := c.Query("western")
 	game := c.Query("game")
 	name := c.Query("name")
+	random := c.Query("random")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
 	isNSFW := helpers.DefaultBoolean(nsfw)
 	isWestern := helpers.DefaultBoolean(western)
 	isGame := helpers.DefaultBoolean(game)
+	isRandom := helpers.DefaultBoolean(random)
 
-	if name == "" {
-		c.JSON(400, gin.H{"error": "Must have a valid name query parameter"})
-	}
-
-	json := characters.SearchCharacter(name, limit, isNSFW, isWestern, isGame)
-
-	if json == "" {
-		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the character with name " + name})
+	if name == "" && isRandom != "true" {
+		c.JSON(400, gin.H{"error": "Must have a valid name query parameter or specify that the query parameter random is true"})
 		return
 	}
 
-	c.Header("Content-Type", "application/json")
-	c.String(200, json)
-}
-
-// CharacterRandomHandler handles the logic for a random character request with
-// the user's specified parameters that act as filters: limit (int), nsfw (true or false),
-// western (true or false), game (true or false)
-func CharacterRandomHandler(c *gin.Context) {
-	initLimit := c.Query("limit")
-	nsfw := c.Query("nsfw")
-	western := c.Query("western")
-	game := c.Query("game")
-
-	limit := helpers.MaxLimit(initLimit, 1, 20)
-	isNSFW := helpers.DefaultBoolean(nsfw)
-	isWestern := helpers.DefaultBoolean(western)
-	isGame := helpers.DefaultBoolean(game)
-
-	json := characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
+	var json string
+	if name != "" {
+		json = characters.SearchCharacter(name, limit, isNSFW, isWestern, isGame)
+	} else {
+		json = characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
+	}
 
 	if json == "" {
-		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the random character"})
+		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the character"})
 		return
 	}
 
