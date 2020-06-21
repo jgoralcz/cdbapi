@@ -1,56 +1,51 @@
 package routes
 
 import (
-	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/jgoralcz/go_cdbapi/src/db/characters"
 	"github.com/jgoralcz/go_cdbapi/src/helpers"
 )
 
 // CharacterByIDHandler handles routes when a user searches by a character ID.
 // Returns 400 if the id is not an int, and returns 404 if the id is not found.
-func CharacterByIDHandler(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	strID := params["id"]
+func CharacterByIDHandler(c *gin.Context) {
+	strID := c.Param("id")
 
 	id, err := strconv.Atoi(strID)
 
 	if err != nil {
-		w.WriteHeader(400)
-		w.Write([]byte(`{ "error": "Must have a valid id parameter" }`))
+		c.JSON(400, gin.H{"error": "Must have a valid id parameter"})
 		return
 	}
 
 	json := characters.GetCharacterByID(id)
 
-	if string(json) == "[]" {
-		w.WriteHeader(404)
-		w.Write([]byte("{ \"error\": \"Could not find a character with id " + strID + "\" }"))
+	if json == "[]" {
+		c.JSON(404, gin.H{"error": "Could not find a character with id " + strID})
 		return
 	}
 
-	if json == nil {
-		w.WriteHeader(500)
+	if json == "" {
+		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the character with id " + strID})
 		return
 	}
 
-	w.WriteHeader(200)
-	w.Write(json)
+	// TODO: make this into a function?
+	c.Header("Content-Type", "application/json")
+	c.String(200, json)
 }
 
 // CharacterNameHandler handles the logic for searching for a character with the
 // user's specified parameters that act as filters: limit (int), nsfw (true or false),
 // western (true or false), game (true or false)
-func CharacterNameHandler(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-
-	initLimit := query.Get("limit")
-	nsfw := query.Get("nsfw")
-	western := query.Get("western")
-	game := query.Get("game")
-	name := query.Get("name")
+func CharacterNameHandler(c *gin.Context) {
+	initLimit := c.Query("limit")
+	nsfw := c.Query("nsfw")
+	western := c.Query("western")
+	game := c.Query("game")
+	name := c.Query("name")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
 	isNSFW := helpers.DefaultBoolean(nsfw)
@@ -58,32 +53,28 @@ func CharacterNameHandler(w http.ResponseWriter, r *http.Request) {
 	isGame := helpers.DefaultBoolean(game)
 
 	if name == "" {
-		w.WriteHeader(400)
-		w.Write([]byte(`{ "error": "Must have a valid name query parameter"}`))
-		return
+		c.JSON(400, gin.H{"error": "Must have a valid name query parameter"})
 	}
 
 	json := characters.SearchCharacter(name, limit, isNSFW, isWestern, isGame)
 
-	if json == nil {
-		w.WriteHeader(500)
+	if json == "" {
+		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the character with name " + name})
 		return
 	}
 
-	w.WriteHeader(200)
-	w.Write(json)
+	c.Header("Content-Type", "application/json")
+	c.String(200, json)
 }
 
 // CharacterRandomHandler handles the logic for a random character request with
 // the user's specified parameters that act as filters: limit (int), nsfw (true or false),
 // western (true or false), game (true or false)
-func CharacterRandomHandler(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-
-	initLimit := query.Get("limit")
-	nsfw := query.Get("nsfw")
-	western := query.Get("western")
-	game := query.Get("game")
+func CharacterRandomHandler(c *gin.Context) {
+	initLimit := c.Query("limit")
+	nsfw := c.Query("nsfw")
+	western := c.Query("western")
+	game := c.Query("game")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
 	isNSFW := helpers.DefaultBoolean(nsfw)
@@ -92,11 +83,11 @@ func CharacterRandomHandler(w http.ResponseWriter, r *http.Request) {
 
 	json := characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
 
-	if json == nil {
-		w.WriteHeader(500)
+	if json == "" {
+		c.JSON(500, gin.H{"error": "An unexpected error has occurred when retrieving the random character"})
 		return
 	}
 
-	w.WriteHeader(200)
-	w.Write(json)
+	c.Header("Content-Type", "application/json")
+	c.String(200, json)
 }

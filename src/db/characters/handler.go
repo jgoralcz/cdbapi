@@ -45,9 +45,9 @@ type AppearsIn struct {
 
 // Handler handles rows from a database query and populates them into a Character struct.
 // It then parses them into json to send back.
-func Handler(rows pgx.Rows) []byte {
+func Handler(rows pgx.Rows) string {
 	if rows == nil {
-		return nil
+		return "[]"
 	}
 
 	characters := []Character{}
@@ -74,14 +74,14 @@ func Handler(rows pgx.Rows) []byte {
 	charactersJSON, marshalErr := json.Marshal(characters)
 	if marshalErr != nil {
 		log.Println(marshalErr)
-		return nil
+		return ""
 	}
 
 	rowsErr := rows.Err()
 	if rowsErr != nil {
 		log.Println(rowsErr)
-		return nil
+		return ""
 	}
 
-	return charactersJSON
+	return string(charactersJSON)
 }

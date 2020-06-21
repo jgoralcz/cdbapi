@@ -1,36 +1,28 @@
 package routes
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/jgoralcz/go_cdbapi/src/helpers"
-	"github.com/jgoralcz/go_cdbapi/src/middleware"
-	"github.com/urfave/negroni"
+	"github.com/gin-gonic/gin"
 )
 
 // Routes is a function that binds with http to handle particular routes
-// It also includes special middleware when a panic occurs, logging each request,
-// and specifying a default header.
-func Routes() *negroni.Negroni {
-	router := mux.NewRouter()
+// It also includes special middleware when a panic occurs and logging each request.
+// Because this uses gin, the endpoints are not REST.
+func Routes() *gin.Engine {
+	r := gin.Default()
 
-	router.HandleFunc("/{characters/random:characters/random\\/?}", CharacterRandomHandler).Methods("GET")
-	router.HandleFunc("/{characters:characters\\/?}", CharacterNameHandler).Methods("GET")
-	router.HandleFunc("/characters/{id}", CharacterByIDHandler).Methods("GET")
-	router.HandleFunc("/characters/{id}/", CharacterByIDHandler).Methods("GET")
-
-	n := negroni.New()
-
-	// error middleware
-	recovery := negroni.NewRecovery()
-	env := helpers.GetEnvOrDefault("ENV", "LOCAL")
-	if env != "LOCAL" {
-		recovery.PrintStack = false
+	v1 := r.Group("/api/v1")
+	{
+		characters := v1.Group("/characters")
+		{
+			characters.GET("/random", CharacterRandomHandler)
+			characters.GET(":id", CharacterByIDHandler)
+			characters.GET("", CharacterNameHandler)
+		}
 	}
 
-	n.Use(recovery)
-	n.Use(negroni.HandlerFunc(middleware.CommonHeaders))
-	n.Use(negroni.HandlerFunc(middleware.Logging))
-	n.UseHandler(router)
+	// r.GET("/characters/random", CharacterRandomHandler)
+	// r.GET("/characters/search", CharacterNameHandler)
+	// r.GET("/characters/id/:id", CharacterByIDHandler)
 
-	return n
+	return r
 }
