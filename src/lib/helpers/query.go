@@ -27,8 +27,5 @@ func DefaultBoolean(userBool string) string {
 	if userBool != "true" && userBool != "false" {
 		return ""
 	}
-	if len(userBool) > 100 {
-		return userBool[:100]
-	}
 	return userBool
 }
