@@ -3,7 +3,7 @@ package characters
 // SearchCharacterQuery is the query that searches for a character based off the user's input
 // for the name, limit, nsfw, western, and game params;
 var SearchCharacterQuery = `
-SELECT id, name, description, original_name, origin, image_url, nsfw, "seriesNsfw",
+SELECT id, name, description, original_name, origin, image_url, image_url_clean, nsfw, "seriesNsfw",
 	is_game AS game, is_western AS western, series, series_id, age, date_of_birth, hip_cm,
 	bust_cm, weight_kg, height_cm, blood_type,
 	(
@@ -19,9 +19,9 @@ SELECT id, name, description, original_name, origin, image_url, nsfw, "seriesNsf
 		) item
 	) AS appears_in
   FROM (
-    SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.nsfw, wsst.nsfw AS "seriesNsfw",
-			wsst.is_game, wsst.is_western, wsst.name AS series, ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm,
-			ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type
+		SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean, ws.nsfw,
+			wsst.nsfw AS "seriesNsfw", wsst.is_game, wsst.is_western, wsst.name AS series, ws.series_id, ws.age, ws.date_of_birth,
+			ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type
 		FROM waifu_schema.waifu_table ws
 		JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
     WHERE (
@@ -80,21 +80,21 @@ SELECT id, name, description, original_name, origin, image_url, nsfw, "seriesNsf
 
 // RandomCharacterQuery gets a random character based off the user's input for limit, nsfw, western, and game.
 var RandomCharacterQuery = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.nsfw, wsst.nsfw AS "seriesNsfw",
-	wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series, ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm,
-	ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
-(
-	SELECT json_agg(item)
-	FROM (
-		SELECT wsst.name AS series, wsst.id AS series_id, wsst.nsfw AS nsfw, wsst.is_game AS game, wsst.is_western AS western
+SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean, 
+	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
+	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
+	(
+		SELECT json_agg(item)
 		FROM (
-			SELECT series_id
-			FROM waifu_schema.appears_in wsai
-			WHERE wsai.waifu_id = ws.id
-		) wsai
-		JOIN waifu_schema.series_table wsst ON wsst.id = wsai.series_id
-	) item
-) AS appears_in
+			SELECT wsst.name AS series, wsst.id AS series_id, wsst.nsfw AS nsfw, wsst.is_game AS game, wsst.is_western AS western
+			FROM (
+				SELECT series_id
+				FROM waifu_schema.appears_in wsai
+				WHERE wsai.waifu_id = ws.id
+			) wsai
+			JOIN waifu_schema.series_table wsst ON wsst.id = wsai.series_id
+		) item
+	) AS appears_in
 FROM waifu_schema.waifu_table ws
 JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
 WHERE (
@@ -127,21 +127,21 @@ LIMIT $1;
 
 // CharacterByID is the query to find a character based on their ID.
 var CharacterByID = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.nsfw, wsst.nsfw AS "seriesNsfw",
-	wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series, ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm,
-	ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
-(
-	SELECT json_agg(item)
-	FROM (
-		SELECT wsst.name AS series, wsst.id AS series_id, wsst.nsfw AS nsfw, wsst.is_game AS game, wsst.is_western AS western
+SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean,
+	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
+	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
+	(
+		SELECT json_agg(item)
 		FROM (
-			SELECT series_id
-			FROM waifu_schema.appears_in wsai
-			WHERE wsai.waifu_id = ws.id
-		) wsai
-		JOIN waifu_schema.series_table wsst ON wsst.id = wsai.series_id
-	) item
-) AS appears_in
+			SELECT wsst.name AS series, wsst.id AS series_id, wsst.nsfw AS nsfw, wsst.is_game AS game, wsst.is_western AS western
+			FROM (
+				SELECT series_id
+				FROM waifu_schema.appears_in wsai
+				WHERE wsai.waifu_id = ws.id
+			) wsai
+			JOIN waifu_schema.series_table wsst ON wsst.id = wsai.series_id
+		) item
+	) AS appears_in
 FROM waifu_schema.waifu_table ws
 JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
 WHERE ws.id = $1;

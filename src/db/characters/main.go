@@ -8,7 +8,7 @@ import (
 // name, limit (1-20), nsfw (true or false), western (true or false), game (true or false)
 func SearchCharacter(name string, limit int, nsfw string, western string, game string) string {
 	rows := db.PoolQueryRows(SearchCharacterQuery, name, limit, nsfw, western, game)
-	return Handler(rows)
+	return HandleRows(rows)
 }
 
 // GetRandomCharacter retrieves a random character from the database based off the user's input of:
@@ -16,11 +16,11 @@ func SearchCharacter(name string, limit int, nsfw string, western string, game s
 // and returns all matching criteria.
 func GetRandomCharacter(limit int, nsfw string, western string, game string) string {
 	rows := db.PoolQueryRows(RandomCharacterQuery, limit, nsfw, western, game)
-	return Handler(rows)
+	return HandleRows(rows)
 }
 
 // GetCharacterByID gets the character information based off the user's input for an ID.
 func GetCharacterByID(id int) string {
-	rows := db.PoolQueryRows(CharacterByID, id)
-	return Handler(rows)
+	rows := db.PoolQueryRow(CharacterByID, id)
+	return HandleRow(rows)
 }

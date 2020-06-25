@@ -13,7 +13,7 @@ ENV GO111MODULE=on \
   UID=10001
 
 LABEL owner = jgoralcz
-LABEL serviceVersion = 0.1.0
+LABEL serviceVersion = 1.0.0
 LABEL description = "Golang Character Database"
 
 RUN adduser \    

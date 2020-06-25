@@ -44,6 +44,7 @@ func init() {
 	log.Printf("%s", dbConfig.User)
 }
 
+// PoolQueryRows queries the database pool and retreives multiple rows.
 func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
 	rows, err := pool.Query(context.Background(), statement, params...)
 	if err != nil {
@@ -53,29 +54,7 @@ func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
 	return rows
 }
 
+// PoolQueryRow queries the database pool and retreives a single row.
 func PoolQueryRow(statement string, params ...interface{}) pgx.Row {
-	// tx, err := Pool.Begin(context.Background())
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return nil
-	// }
-	// defer tx.Rollback(context.Background())
-
-	row := pool.QueryRow(context.Background(), statement, params...)
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return nil
-	// }
-
-	// err = tx.Commit(context.Background())
-	// if err != nil {
-	// 	// TODO: check if this is needed
-	// 	tx.Rollback(context.Background())
-	// 	log.Println(err)
-	// 	return nil
-	// }
-	// log.Print(err)
-	log.Print(row)
-
-	return row
+	return pool.QueryRow(context.Background(), statement, params...)
 }

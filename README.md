@@ -16,3 +16,13 @@ go get github.com/swaggo/swag/cmd/swag
 
 
 Use Chi or Mux for a better handler that isn't used purely for performance. Negroni is also a good additional middleware option.
+
+
+## swagger docs
+docker build -f Dockerfilego -t go_test . && docker rm -f go_test || true && docker run -d -p 8443:8443 -v $PWD/api.json:/Users/Josh/Documents/GitHub/go_cdbapi/api.json --name go_test go_test
+
+Follow instructions here: https://github.com/swaggo/gin-swagger
+go get -u github.com/swaggo/swag/cmd/swag
+swag init
+
+copy files to docs/

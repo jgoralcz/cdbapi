@@ -13,6 +13,7 @@ import (
 	"github.com/jgoralcz/go_cdbapi/src/routes"
 )
 
+// Run initializes the http server with the gin framework.
 func Run() {
 	r := routes.Routes()
 

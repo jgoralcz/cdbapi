@@ -1,0 +1,197 @@
+basePath: /api/v1
+definitions:
+  characters.AppearsIn:
+    properties:
+      game:
+        example: "true"
+        format: boolean
+        type: string
+      nsfw:
+        example: "false"
+        format: boolean
+        type: string
+      series:
+        example: Persona 4
+        type: string
+      series_id:
+        example: 2240
+        type: integer
+      western:
+        example: "false"
+        format: boolean
+        type: string
+    type: object
+  characters.Character:
+    properties:
+      age:
+        example: "0"
+        format: integer
+        type: string
+      appears_in:
+        items:
+          $ref: "#/definitions/characters.AppearsIn"
+        type: array
+      blood_type:
+        example: "null"
+        type: string
+      bust_cm:
+        example: "0"
+        format: number
+        type: string
+      date_of_birth:
+        example: "null"
+        type: string
+      description:
+        example: Marie is an assistant of the Velvet Room in Persona 4 Golden. When Marie is first met, she seems to be a very cold and antisocial individual. She is sullen, cranky, sarcastic, irritable, very foul-mouthed and often prone to mood swings. She will not hesitate to voice out her opinion or express her thoughts, regardless of how it would make everyone feel. Marie sometimes expresses her thoughts in poems which often deal with depressing themes like farewells and existentialism, questioning her own origin. Besides this, Marie is into fashion, loves nature (another major theme in her poems) and is apparently concerned about her figure, which is why she only eats healthy food.
+        type: string
+      game:
+        example: "false"
+        format: boolean
+        type: string
+      height_cm:
+        example: "164"
+        format: number
+        type: string
+      hip_cm:
+        example: "0"
+        format: number
+        type: string
+      id:
+        example: 7960
+        type: integer
+      image_url:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      image_url_clean:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      name:
+        example: Marie
+        type: string
+      nsfw:
+        example: "false"
+        format: boolean
+        type: string
+      origin:
+        example: VelvetRoom
+        type: string
+      original_name:
+        example: "null"
+        type: string
+      series:
+        example: Persona 4
+        type: string
+      series_id:
+        example: "2240"
+        format: integer
+        type: string
+      series_nsfw:
+        example: "false"
+        format: boolean
+        type: string
+      weight_kg:
+        example: "0"
+        format: number
+        type: string
+      western:
+        example: "false"
+        format: boolean
+        type: string
+    type: object
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: Bad Request
+        type: string
+    type: object
+info:
+  contact:
+    name: jgoralcz
+    url: https://github.com/jgoralcz/cdbapi
+  description: Character Database is a simple example of golang using Gin and interacting with a PostgreSQL database.
+  license: {}
+  termsOfService: http://swagger.io/terms/
+  title: Character Database (Go CDBAPI)
+  version: "1.0"
+paths:
+  /characters:
+    get:
+      description: Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string), random (boolean). You must use either name or random in order to get a result back.
+      parameters:
+        - description: name to search (use without random param)
+          in: query
+          name: name
+          required: true
+          type: string
+        - description: true or false (use without name param)
+          in: query
+          name: random
+          required: true
+          type: boolean
+        - description: limit 1-20; Default 1
+          in: query
+          name: limit
+          type: integer
+        - description: whether the character is nsfw or not
+          in: query
+          name: nsfw
+          type: boolean
+        - description: whether the character is western (Cartoon) or not (Anime)
+          in: query
+          name: western
+          type: boolean
+        - description: whether the character is from a game or not
+          in: query
+          name: game
+          type: boolean
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: "#/definitions/characters.Character"
+            type: array
+        "400":
+          description: Must have a valid name query parameter or specify that the query parameter random is true
+          schema:
+            $ref: "#/definitions/httputil.HTTPError"
+        "500":
+          description: An unexpected error has occurred when retrieving the character
+          schema:
+            $ref: "#/definitions/httputil.HTTPError"
+      summary: Gets a character based off the user's query parameters.
+  /characters/{id}:
+    get:
+      description: get character metadata by id
+      parameters:
+        - description: Some ID
+          in: path
+          name: id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/characters.Character"
+        "400":
+          description: Must have a valid id parameter
+          schema:
+            $ref: "#/definitions/httputil.HTTPError"
+        "404":
+          description: Could not find a character with id Some ID
+          schema:
+            $ref: "#/definitions/httputil.HTTPError"
+        "500":
+          description: An unexpected error has occurred when retrieving the character with id Some ID
+          schema:
+            $ref: "#/definitions/httputil.HTTPError"
+      summary: Gets a character by the ID
+swagger: "2.0"
