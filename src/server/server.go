@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jgoralcz/go_cdbapi/src/helpers"
+	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
 	"github.com/jgoralcz/go_cdbapi/src/routes"
 )
 

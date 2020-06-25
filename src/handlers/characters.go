@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jgoralcz/go_cdbapi/src/db/characters"
-	"github.com/jgoralcz/go_cdbapi/src/helpers"
-	"github.com/jgoralcz/go_cdbapi/src/httputil"
+	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
+	"github.com/jgoralcz/go_cdbapi/src/lib/httputil"
 )
 
 // @Summary Gets a character by the ID

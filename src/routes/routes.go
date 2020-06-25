@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/jgoralcz/go_cdbapi/docs" // Swagger docs
 	"github.com/jgoralcz/go_cdbapi/src/handlers"
-	"github.com/jgoralcz/go_cdbapi/src/helpers"
+	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -18,6 +18,7 @@ func Routes() *gin.Engine {
 	if env == "LOCAL" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+
 	gin.DisableConsoleColor()
 	r := gin.Default()
 

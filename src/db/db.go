@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jgoralcz/go_cdbapi/src/helpers"
+	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
 )
 
 type dbConfig struct {
