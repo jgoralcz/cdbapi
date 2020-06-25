@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
+	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 )
 
 type dbConfig struct {
@@ -27,7 +27,7 @@ var pool *pgxpool.Pool
 
 func init() {
 	var dbConfig dbConfig
-	helpers.MarshalJSONFile("/Users/Josh/Documents/GitHub/go_cdbapi/api.json", &dbConfig)
+	helpers.MarshalJSONFile("/Users/Josh/Documents/GitHub/cdbapi/api.json", &dbConfig)
 
 	parsedURL := "postgres://" + dbConfig.User + ":" + dbConfig.Password + "@" + dbConfig.Host +
 		":" + strconv.Itoa(dbConfig.Port) + "/" + dbConfig.Database + "?pool_max_conns=" + strconv.Itoa(dbConfig.MaxConnections) +

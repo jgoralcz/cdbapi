@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"context"
@@ -9,11 +9,18 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jgoralcz/cdbapi/src/lib/helpers"
+	"github.com/jgoralcz/cdbapi/src/helpers"
 	"github.com/jgoralcz/cdbapi/src/routes"
 )
 
 // Run initializes the http server with the gin framework.
+// @title Character Database (Go CDBAPI)
+// @version 1.0
+// @description Character Database is a simple example of golang using Gin and interacting with a PostgreSQL database. It is mainly composed of GET requests which retrieve characters and series.
+// @termsOfService http://swagger.io/terms/
+// @contact.name jgoralcz
+// @contact.url https://github.com/jgoralcz/cdbapi
+// @BasePath /api/v1
 func Run() {
 	r := routes.Routes()
 

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jgoralcz/go_cdbapi/src/server"
+import "github.com/jgoralcz/cdbapi/src/server"
 
 // @title Character Database (Go CDBAPI)
 // @version 1.0

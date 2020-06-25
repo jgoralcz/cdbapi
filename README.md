@@ -1,5 +1,5 @@
 go build
-./go_cdbapi
+./cdbapi
 
 Building a secure golang container: https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324
 
@@ -19,7 +19,7 @@ Use Chi or Mux for a better handler that isn't used purely for performance. Negr
 
 
 ## swagger docs
-docker build -f Dockerfilego -t go_test . && docker rm -f go_test || true && docker run -d -p 8443:8443 -v $PWD/api.json:/Users/Josh/Documents/GitHub/go_cdbapi/api.json --name go_test go_test
+docker build -f Dockerfilego -t go_test . && docker rm -f go_test || true && docker run -d -p 8443:8443 -v $PWD/api.json:/Users/Josh/Documents/GitHub/cdbapi/api.json --name go_test go_test
 
 Follow instructions here: https://github.com/swaggo/gin-swagger
 go get -u github.com/swaggo/swag/cmd/swag

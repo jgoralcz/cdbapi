@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "github.com/jgoralcz/go_cdbapi/docs" // Swagger docs
-	"github.com/jgoralcz/go_cdbapi/src/handlers"
-	"github.com/jgoralcz/go_cdbapi/src/lib/helpers"
+	_ "github.com/jgoralcz/cdbapi/docs" // Swagger docs
+	"github.com/jgoralcz/cdbapi/src/handlers"
+	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	ginSwagger "github.com/swaggo/gin-swagger"

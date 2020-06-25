@@ -1,5 +1,5 @@
 logs
 go.mod
 go.sum
-go_cdbapi
+cdbapi
 api.json

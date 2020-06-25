@@ -1,7 +1,7 @@
 package characters
 
 import (
-	"github.com/jgoralcz/go_cdbapi/src/db"
+	"github.com/jgoralcz/cdbapi/src/db"
 )
 
 // SearchCharacter searches for a character based off the user's input for:
