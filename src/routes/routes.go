@@ -19,6 +19,7 @@ func Routes() *echo.Echo {
 	// }
 
 	e := echo.New()
+	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -27,8 +28,9 @@ func Routes() *echo.Echo {
 	{
 		characters := v1.Group("/characters")
 		{
+			characters.GET("/random", handlers.Character)
 			characters.GET("/:id", handlers.CharacterByID)
-			characters.GET("/", handlers.Character)
+			characters.GET("", handlers.Character)
 		}
 		// series := v1.Group("/series")
 	}
