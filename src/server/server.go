@@ -15,14 +15,13 @@ import (
 
 // Run initializes the http server with the gin framework.
 func Run() {
-	r := routes.Routes()
+	echo := routes.Routes()
 
 	port := helpers.GetEnvOrDefault("PORT", "8443")
 	env := helpers.GetEnvOrDefault("ENV", "LOCAL")
 	addr := ":" + port
 
 	server := &http.Server{
-		Handler:      r,
 		Addr:         addr,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -30,9 +29,7 @@ func Run() {
 
 	go func() {
 		log.Printf("Starting %s Server on port %s", env, port)
-		if err := server.ListenAndServe(); err != nil {
-			log.Fatal(err)
-		}
+		echo.Logger.Fatal(echo.StartServer(server))
 	}()
 
 	waitForShutdown(server)

@@ -3,10 +3,9 @@ package handlers
 import (
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"github.com/jgoralcz/cdbapi/src/db/characters"
 	"github.com/jgoralcz/cdbapi/src/lib/helpers"
-	"github.com/jgoralcz/cdbapi/src/lib/httputil"
+	"github.com/labstack/echo/v4"
 )
 
 // @Summary Gets a character by the ID
@@ -14,34 +13,31 @@ import (
 // @Produce json
 // @Param id path int true "Some ID"
 // @Success 200 {object} characters.Character
-// @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
-// @Failure 404 {object} httputil.HTTPError "Could not find a character with id Some ID"
-// @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character with id Some ID"
+// @Failure 400 {object} echo.HTTPError "Must have a valid id parameter"
+// @Failure 404 {object} echo.HTTPError "Could not find a character with id Some ID"
+// @Failure 500 {object} echo.HTTPError "An unexpected error has occurred when retrieving the character with id Some ID"
 // @Router /characters/{id} [get]
-func CharacterByID(c *gin.Context) {
+func CharacterByID(c echo.Context) (err error) {
 	strID := c.Param("id")
 
 	id, err := strconv.Atoi(strID)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Must have a valid id parameter"})
-		return
+		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
 	}
 
 	json := characters.GetCharacterByID(id)
 
 	if json == "[]" {
-		httputil.NewError(c, 404, "Could not find a character with id "+strID)
-		return
+		return &echo.HTTPError{Code: 404, Message: "Could not find a character with id " + strID}
 	}
 
 	if json == "" {
-		httputil.NewError(c, 500, "An unexpected error has occurred when retrieving the character with id "+strID)
-		return
+		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character with id " + strID}
 	}
 
-	c.Header("Content-Type", "application/json")
-	c.String(200, json)
+	c.Response().Header().Set("Content-Type", "application/json")
+	return c.String(200, json)
 }
 
 // @Summary Gets a character based off the user's query parameters.
@@ -54,16 +50,16 @@ func CharacterByID(c *gin.Context) {
 // @Param western query boolean false "whether the character is western (Cartoon) or not (Anime)"
 // @Param game query boolean false "whether the character is from a game or not"
 // @Success 200 {array} characters.Character
-// @Failure 400 {object} httputil.HTTPError "Must have a valid name query parameter or specify that the query parameter random is true"
-// @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
+// @Failure 400 {object} echo.HTTPError "Must have a valid name query parameter or specify that the query parameter random is true"
+// @Failure 500 {object} echo.HTTPError "An unexpected error has occurred when retrieving the character"
 // @Router /characters [get]
-func Character(c *gin.Context) {
-	initLimit := c.Query("limit")
-	nsfw := c.Query("nsfw")
-	western := c.Query("western")
-	game := c.Query("game")
-	name := c.Query("name")
-	random := c.Query("random")
+func Character(c echo.Context) (err error) {
+	initLimit := c.QueryParam("limit")
+	nsfw := c.QueryParam("nsfw")
+	western := c.QueryParam("western")
+	game := c.QueryParam("game")
+	name := c.QueryParam("name")
+	random := c.QueryParam("random")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
 	isNSFW := helpers.DefaultBoolean(nsfw)
@@ -72,8 +68,7 @@ func Character(c *gin.Context) {
 	isRandom := helpers.DefaultBoolean(random)
 
 	if name == "" && isRandom != "true" {
-		httputil.NewError(c, 400, "Must have a valid name query parameter or specify that the query parameter random is true")
-		return
+		return &echo.HTTPError{Code: 400, Message: "Must have a valid name query parameter or specify that the query parameter random is true"}
 	}
 
 	var json string
@@ -84,10 +79,9 @@ func Character(c *gin.Context) {
 	}
 
 	if json == "" {
-		httputil.NewError(c, 500, "An unexpected error has occurred when retrieving the character")
-		return
+		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}
 	}
 
-	c.Header("Content-Type", "application/json")
-	c.String(200, json)
+	c.Response().Header().Set("Content-Type", "application/json")
+	return c.String(200, json)
 }
