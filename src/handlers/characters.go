@@ -42,8 +42,8 @@ func CharacterByID(c echo.Context) (err error) {
 }
 
 // CharacterRandom is a handler for echo that gets a random character based off a user's filters.
-// @Summary Gets a character based off the user's query parameters.
-// @Description Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
+// @Summary Gets a random character based off the user's query parameters.
+// @Description Get a random character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
 // @Produce json
 // @Param limit query int false "limit 1-20; Default 1"
 // @Param nsfw query boolean false "whether the character is nsfw or not"

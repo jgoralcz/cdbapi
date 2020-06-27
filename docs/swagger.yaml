@@ -4,11 +4,9 @@ definitions:
     properties:
       game:
         example: true
-        format: boolean
         type: boolean
       nsfw:
         example: false
-        format: boolean
         type: boolean
       series:
         example: Persona 4
@@ -18,15 +16,13 @@ definitions:
         type: integer
       western:
         example: false
-        format: boolean
         type: boolean
     type: object
   characters.Character:
     properties:
       age:
-        example: "0"
-        format: integer
-        type: string
+        example: 0
+        type: integer
       appears_in:
         items:
           $ref: '#/definitions/characters.AppearsIn'
@@ -35,9 +31,8 @@ definitions:
         example: "null"
         type: string
       bust_cm:
-        example: "0"
-        format: number
-        type: string
+        example: 0
+        type: number
       date_of_birth:
         example: "null"
         type: string
@@ -48,13 +43,11 @@ definitions:
         example: false
         type: boolean
       height_cm:
-        example: "164"
-        format: number
-        type: string
+        example: 164
+        type: number
       hip_cm:
-        example: "0"
-        format: number
-        type: string
+        example: 0
+        type: number
       id:
         example: 7960
         type: integer
@@ -86,18 +79,14 @@ definitions:
         example: false
         type: boolean
       weight_kg:
-        example: "0"
-        format: number
-        type: string
+        example: 0
+        type: number
       western:
         example: false
         type: boolean
     type: object
   httputil.HTTPError:
     properties:
-      code:
-        example: 400
-        type: integer
       message:
         example: Bad Request
         type: string

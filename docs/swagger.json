@@ -181,12 +181,10 @@
             "properties": {
                 "game": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": true
                 },
                 "nsfw": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": false
                 },
                 "series": {
@@ -199,7 +197,6 @@
                 },
                 "western": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": false
                 }
             }
@@ -208,9 +205,8 @@
             "type": "object",
             "properties": {
                 "age": {
-                    "type": "string",
-                    "format": "integer",
-                    "example": "0"
+                    "type": "integer",
+                    "example": 0
                 },
                 "appears_in": {
                     "type": "array",
@@ -223,9 +219,8 @@
                     "example": "null"
                 },
                 "bust_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "date_of_birth": {
                     "type": "string",
@@ -240,14 +235,12 @@
                     "example": false
                 },
                 "height_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "164"
+                    "type": "number",
+                    "example": 164
                 },
                 "hip_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "id": {
                     "type": "integer",
@@ -290,9 +283,8 @@
                     "example": false
                 },
                 "weight_kg": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "western": {
                     "type": "boolean",
@@ -303,10 +295,6 @@
         "httputil.HTTPError": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 400
-                },
                 "message": {
                     "type": "string",
                     "example": "Bad Request"

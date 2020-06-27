@@ -197,12 +197,10 @@ var doc = `{
             "properties": {
                 "game": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": true
                 },
                 "nsfw": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": false
                 },
                 "series": {
@@ -215,7 +213,6 @@ var doc = `{
                 },
                 "western": {
                     "type": "boolean",
-                    "format": "boolean",
                     "example": false
                 }
             }
@@ -224,9 +221,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "age": {
-                    "type": "string",
-                    "format": "integer",
-                    "example": "0"
+                    "type": "integer",
+                    "example": 0
                 },
                 "appears_in": {
                     "type": "array",
@@ -239,9 +235,8 @@ var doc = `{
                     "example": "null"
                 },
                 "bust_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "date_of_birth": {
                     "type": "string",
@@ -256,14 +251,12 @@ var doc = `{
                     "example": false
                 },
                 "height_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "164"
+                    "type": "number",
+                    "example": 164
                 },
                 "hip_cm": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "id": {
                     "type": "integer",
@@ -306,9 +299,8 @@ var doc = `{
                     "example": false
                 },
                 "weight_kg": {
-                    "type": "string",
-                    "format": "number",
-                    "example": "0"
+                    "type": "number",
+                    "example": 0
                 },
                 "western": {
                     "type": "boolean",
@@ -319,10 +311,6 @@ var doc = `{
         "httputil.HTTPError": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 400
-                },
                 "message": {
                     "type": "string",
                     "example": "Bad Request"

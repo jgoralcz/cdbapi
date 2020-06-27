@@ -100,22 +100,30 @@ JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
 WHERE (
 	('false' = $2 AND ws.nsfw = FALSE)
 	OR ('true' = $2 AND ws.nsfw = TRUE)
-	OR ws.nsfw IS NOT NULL
+	OR (
+		'false' != $2 AND 'true' != $2 AND ws.nsfw IS NOT NULL
+	)
 )
 AND (
 	('false' = $2 AND wsst.nsfw = FALSE)
 	OR ('true' = $2 AND wsst.nsfw = TRUE)
-	OR wsst.nsfw IS NOT NULL
+	OR (
+		'false' != $2 AND 'true' != $2 AND wsst.nsfw IS NOT NULL
+	)
 )
 AND (
 	('false' = $3 AND wsst.is_western = FALSE)
 	OR ('true' = $3 AND wsst.is_western = TRUE)
-	OR wsst.is_western IS NOT NULL
+	OR (
+		'false' != $3 AND 'true' != $3 AND wsst.is_western IS NOT NULL
+	)
 )
 AND (
 	('false' = $4 AND wsst.is_game = FALSE)
 	OR ('true' = $4 AND wsst.is_game = TRUE)
-	OR wsst.is_game IS NOT NULL
+	OR (
+		'false' != $4 AND 'true' != $4 AND wsst.is_game IS NOT NULL
+	)
 )
 AND r > (
 		SELECT MAX(r)

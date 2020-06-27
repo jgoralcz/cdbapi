@@ -24,12 +24,12 @@ type Character struct {
 	Western       bool        `json:"western" example:"false"`
 	Series        null.String `json:"series" example:"Persona 4"`
 	SeriesID      int         `json:"series_id" example:"2240"`
-	Age           null.Int    `json:"age" format:"integer" example:"0"`
+	Age           null.Int    `json:"age" swaggertype:"integer" example:"0"`
 	DateOfBirth   null.String `json:"date_of_birth" example:"null"`
-	HipCM         null.Float  `json:"hip_cm" format:"number" example:"0"`
-	BustCM        null.Float  `json:"bust_cm" format:"number" example:"0"`
-	WeightKG      null.Float  `json:"weight_kg" format:"number" example:"0"`
-	HeightCM      null.Float  `json:"height_cm" format:"number" example:"164"`
+	HipCM         null.Float  `json:"hip_cm" swaggertype:"number" example:"0"`
+	BustCM        null.Float  `json:"bust_cm" swaggertype:"number" example:"0"`
+	WeightKG      null.Float  `json:"weight_kg" swaggertype:"number" example:"0"`
+	HeightCM      null.Float  `json:"height_cm" swaggertype:"number" example:"164"`
 	BloodType     null.String `json:"blood_type" example:"null"`
 	AppearsIn     []AppearsIn `json:"appears_in"`
 }
@@ -40,9 +40,9 @@ type Character struct {
 type AppearsIn struct {
 	Series   string `json:"series" example:"Persona 4"`
 	SeriesID int    `json:"series_id" example:"2240"`
-	Nsfw     bool   `json:"nsfw" format:"boolean" example:"false"`
-	Game     bool   `json:"game" format:"boolean" example:"true"`
-	Western  bool   `json:"western" format:"boolean" example:"false"`
+	Nsfw     bool   `json:"nsfw" swaggertype:"boolean" example:"false"`
+	Game     bool   `json:"game" swaggertype:"boolean" example:"true"`
+	Western  bool   `json:"western" swaggertype:"boolean" example:"false"`
 }
 
 // HandleRows handles rows from a database query and populates them into a Character struct.
