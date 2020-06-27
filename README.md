@@ -21,8 +21,11 @@ Use Chi or Mux for a better handler that isn't used purely for performance. Negr
 ## swagger docs
 docker build -f Dockerfilego -t go_test . && docker rm -f go_test || true && docker run -d -p 8443:8443 -v $PWD/api.json:/Users/Josh/Documents/GitHub/cdbapi/api.json --name go_test go_test
 
-Follow instructions here: https://github.com/swaggo/gin-swagger
+Follow instructions here: https://github.com/swaggo/echo-swagger
 go get -u github.com/swaggo/swag/cmd/swag
+go get -u github.com/swaggo/echo-swagger
 swag init
+
+go env
 
 copy files to docs/

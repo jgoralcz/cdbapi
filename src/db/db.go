@@ -29,9 +29,7 @@ func init() {
 	var dbConfig dbConfig
 	helpers.MarshalJSONFile("/Users/Josh/Documents/GitHub/cdbapi/api.json", &dbConfig)
 
-	parsedURL := "postgres://" + dbConfig.User + ":" + dbConfig.Password + "@" + dbConfig.Host +
-		":" + strconv.Itoa(dbConfig.Port) + "/" + dbConfig.Database + "?pool_max_conns=" + strconv.Itoa(dbConfig.MaxConnections) +
-		"&pool_max_conn_lifetime=" + strconv.Itoa(dbConfig.ConnectionTimeoutMillis) + "ms&pool_max_conn_lifetime=" + strconv.Itoa(dbConfig.IdleTimeoutMillis) + "ms"
+	parsedURL := generateParsedURLFromConfig(dbConfig)
 
 	var err error
 	pool, err = pgxpool.Connect(context.Background(), parsedURL)
@@ -42,6 +40,16 @@ func init() {
 	}
 
 	log.Printf("%s", dbConfig.User)
+}
+
+func generateParsedURLFromConfig(dbConfig dbConfig) string {
+	if dbConfig.User == "" || dbConfig.Password == "" || dbConfig.Host == "" || dbConfig.Database == "" {
+		return ""
+	}
+
+	return "postgres://" + dbConfig.User + ":" + dbConfig.Password + "@" + dbConfig.Host +
+		":" + strconv.Itoa(dbConfig.Port) + "/" + dbConfig.Database + "?pool_max_conns=" + strconv.Itoa(dbConfig.MaxConnections) +
+		"&pool_max_conn_lifetime=" + strconv.Itoa(dbConfig.ConnectionTimeoutMillis) + "ms&pool_max_conn_idle_time=" + strconv.Itoa(dbConfig.IdleTimeoutMillis) + "ms"
 }
 
 // PoolQueryRows queries the database pool and retreives multiple rows.

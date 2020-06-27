@@ -21,7 +21,7 @@ type Character struct {
 	Nsfw          bool        `json:"nsfw" example:"false"`
 	SeriesNsfw    bool        `json:"series_nsfw" example:"false"`
 	Game          bool        `json:"game" example:"false"`
-	Western       bool        `json:"western" format:"boolean" example:"false"`
+	Western       bool        `json:"western" example:"false"`
 	Series        null.String `json:"series" example:"Persona 4"`
 	SeriesID      int         `json:"series_id" example:"2240"`
 	Age           null.Int    `json:"age" format:"integer" example:"0"`
