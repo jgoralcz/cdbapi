@@ -41,6 +41,60 @@ func CharacterByID(c echo.Context) (err error) {
 	return c.String(200, json)
 }
 
+// CharacterImages is a handler for echo that gets a character's images based off the character ID, offset, and limit.
+// @Summary Gets a character's image based off the character's ID, offset, and limit
+// @Description Get the character's images between the requested offset and limit with the requested ID.
+// @Produce json
+// @Param limit query int false "limit 1-10; Default 10"
+// @Param offset query int false "the offset for the images for pagination"
+// @Param nsfw query boolean false "whether the image is nsfw or not"
+// @Success 200 {array} characters.CharacterImage
+// @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
+// @Failure 400 {object} httputil.HTTPError "Invalid limit provided. Limit must be a valid number less than 10 and greater than 0"
+// @Failure 400 {object} httputil.HTTPError "Invalid offset provided. Offset must be a valid number and greater than 0"
+// @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the images"
+// @Router /characters/:id/images [get]
+func CharacterImages(c echo.Context) (err error) {
+	strID := c.Param("id")
+	id, err := strconv.Atoi(strID)
+
+	nsfw := c.QueryParam("nsfw")
+	isNSFW := helpers.DefaultBoolean(nsfw)
+
+	if err != nil {
+		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
+	}
+
+	strLimit := c.QueryParam("limit")
+	if strLimit == "" {
+		strLimit = "10"
+	}
+	limit, err := strconv.Atoi(strLimit)
+
+	if err != nil || limit > 10 || limit < 1 {
+		return &echo.HTTPError{Code: 400, Message: "Invalid limit provided. Limit must be a valid number less than 10 and greater than 0"}
+	}
+
+	strOffset := c.QueryParam("offset")
+	if strOffset == "" {
+		strOffset = "0"
+	}
+	offset, err := strconv.Atoi(strOffset)
+
+	if err != nil || offset < 0 {
+		return &echo.HTTPError{Code: 400, Message: "Invalid offset provided. Offset must be a valid number and greater than 0"}
+	}
+
+	json := characters.GetCharacterImages(id, limit, offset, isNSFW)
+
+	if json == "" {
+		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
+	}
+
+	c.Response().Header().Set("Content-Type", "application/json")
+	return c.String(200, json)
+}
+
 // CharacterRandom is a handler for echo that gets a random character based off a user's filters.
 // @Summary Gets a random character based off the user's query parameters.
 // @Description Get a random character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
@@ -102,7 +156,7 @@ func Character(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid name query parameter"}
 	}
 
-	json := characters.SearchCharacter(name, limit, isNSFW, isWestern, isGame)
+	json := characters.GetSearchCharacter(name, limit, isNSFW, isWestern, isGame)
 
 	if json == "" {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}

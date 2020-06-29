@@ -1,9 +1,9 @@
 package characters
 
-// SearchCharacterQuery is the query that searches for a character based off the user's input
+// CharacterSearch is the query that searches for a character based off the user's input
 // for the name, limit, nsfw, western, and game params;
-var SearchCharacterQuery = `
-SELECT id, name, description, original_name, origin, image_url, image_url_clean, nsfw, "seriesNsfw",
+var CharacterSearch = `
+SELECT id, name, description, original_name, origin, image_url, image_url_clean AS image_url_crop, nsfw, "seriesNsfw",
 	is_game AS game, is_western AS western, series, series_id, age, date_of_birth, hip_cm,
 	bust_cm, weight_kg, height_cm, blood_type,
 	(
@@ -78,9 +78,9 @@ SELECT id, name, description, original_name, origin, image_url, image_url_clean,
   LIMIT $2;
 `
 
-// RandomCharacterQuery gets a random character based off the user's input for limit, nsfw, western, and game.
-var RandomCharacterQuery = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean, 
+// CharacterRandom gets a random character based off the user's input for limit, nsfw, western, and game.
+var CharacterRandom = `
+SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean AS image_url_crop, 
 	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
 	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
 	(
@@ -135,7 +135,7 @@ LIMIT $1;
 
 // CharacterByID is the query to find a character based on their ID.
 var CharacterByID = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean,
+SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean AS image_url_crop,
 	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
 	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
 	(
@@ -153,4 +153,18 @@ SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url
 FROM waifu_schema.waifu_table ws
 JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
 WHERE ws.id = $1;
+`
+
+// CharacterImagesByIDOffsetLimit is the query to find the images for a character with an offset and limit.
+var CharacterImagesByIDOffsetLimit = `
+	SELECT waifu_id AS character_id, image_id, image_url_path_extra AS image_url, image_url_clean_path_extra AS image_url_crop, nsfw
+	FROM waifu_schema.waifu_table_images
+	WHERE waifu_id = $1
+		AND (
+			('false' = $4 AND nsfw = FALSE)
+			OR ('true' = $4 AND nsfw = TRUE)
+			OR ('false' != $4 AND 'true' != $4)
+		)
+	LIMIT $2
+	OFFSET $3
 `
