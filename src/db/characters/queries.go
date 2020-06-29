@@ -157,13 +157,17 @@ WHERE ws.id = $1;
 
 // CharacterImagesByIDOffsetLimit is the query to find the images for a character with an offset and limit.
 var CharacterImagesByIDOffsetLimit = `
-	SELECT waifu_id AS character_id, image_id, image_url_path_extra AS image_url, image_url_clean_path_extra AS image_url_crop, nsfw
+	SELECT waifu_id, image_id, image_url_path_extra, image_url_clean_path_extra, nsfw
 	FROM waifu_schema.waifu_table_images
 	WHERE waifu_id = $1
 		AND (
 			('false' = $4 AND nsfw = FALSE)
 			OR ('true' = $4 AND nsfw = TRUE)
 			OR ('false' != $4 AND 'true' != $4)
+		)
+		AND (
+			('true' = $5 AND image_url_clean_path_extra IS NOT NULL)
+			OR 'true' != $5
 		)
 	LIMIT $2
 	OFFSET $3

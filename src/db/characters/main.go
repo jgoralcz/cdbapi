@@ -26,7 +26,7 @@ func GetCharacterByID(id int) string {
 }
 
 // GetCharacterImages gets the basic information on the character images.
-func GetCharacterImages(id int, limit int, offset int, nsfw string) string {
-	rows := db.PoolQueryRows(CharacterImagesByIDOffsetLimit, id, limit, offset, nsfw)
+func GetCharacterImages(id int, limit int, offset int, nsfw string, crop string) string {
+	rows := db.PoolQueryRows(CharacterImagesByIDOffsetLimit, id, limit, offset, nsfw, crop)
 	return handleBasicImage(rows)
 }

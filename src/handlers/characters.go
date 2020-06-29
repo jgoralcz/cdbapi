@@ -18,7 +18,8 @@ import (
 // @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
 // @Failure 404 {object} httputil.HTTPError "Could not find a character with id Some ID"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character with id Some ID"
-// @Router /characters/{id} [get]
+// @Router /characters/{id} [get]\
+// @Tags Character
 func CharacterByID(c echo.Context) (err error) {
 	strID := c.Param("id")
 	id, err := strconv.Atoi(strID)
@@ -29,7 +30,7 @@ func CharacterByID(c echo.Context) (err error) {
 
 	json := characters.GetCharacterByID(id)
 
-	if json == "[]" {
+	if json == "{}" {
 		return &echo.HTTPError{Code: 404, Message: "Could not find a character with id " + strID}
 	}
 
@@ -45,21 +46,27 @@ func CharacterByID(c echo.Context) (err error) {
 // @Summary Gets a character's image based off the character's ID, offset, and limit
 // @Description Get the character's images between the requested offset and limit with the requested ID.
 // @Produce json
+// @Param id path int true "Some ID"
 // @Param limit query int false "limit 1-10; Default 10"
 // @Param offset query int false "the offset for the images for pagination"
 // @Param nsfw query boolean false "whether the image is nsfw or not"
+// @Param crop query boolean false "filter down by cropped images only"
 // @Success 200 {array} characters.CharacterImage
 // @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
 // @Failure 400 {object} httputil.HTTPError "Invalid limit provided. Limit must be a valid number less than 10 and greater than 0"
 // @Failure 400 {object} httputil.HTTPError "Invalid offset provided. Offset must be a valid number and greater than 0"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the images"
-// @Router /characters/:id/images [get]
+// @Router /characters/{id}/images [get]
+// @Tags Character
 func CharacterImages(c echo.Context) (err error) {
 	strID := c.Param("id")
 	id, err := strconv.Atoi(strID)
 
 	nsfw := c.QueryParam("nsfw")
 	isNSFW := helpers.DefaultBoolean(nsfw)
+
+	crop := c.QueryParam("crop")
+	isCrop := helpers.DefaultBoolean(crop)
 
 	if err != nil {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
@@ -85,7 +92,7 @@ func CharacterImages(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Invalid offset provided. Offset must be a valid number and greater than 0"}
 	}
 
-	json := characters.GetCharacterImages(id, limit, offset, isNSFW)
+	json := characters.GetCharacterImages(id, limit, offset, isNSFW, isCrop)
 
 	if json == "" {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
@@ -106,6 +113,7 @@ func CharacterImages(c echo.Context) (err error) {
 // @Success 200 {array} characters.Character
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
 // @Router /characters/random [get]
+// @Tags Character
 func CharacterRandom(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
 	nsfw := c.QueryParam("nsfw")
@@ -140,6 +148,7 @@ func CharacterRandom(c echo.Context) (err error) {
 // @Failure 400 {object} httputil.HTTPError "Must have a valid name query parameter"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
 // @Router /characters [get]
+// @Tags Character
 func Character(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
 	nsfw := c.QueryParam("nsfw")

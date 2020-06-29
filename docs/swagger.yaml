@@ -54,7 +54,7 @@ definitions:
       image_url:
         example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
         type: string
-      image_url_clean:
+      image_url_crop:
         example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
         type: string
       name:
@@ -85,11 +85,62 @@ definitions:
         example: false
         type: boolean
     type: object
+  characters.CharacterImage:
+    properties:
+      character_id:
+        example: 7960
+        type: integer
+      image_id:
+        example: 1234
+        type: integer
+      image_url:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      image_url_crop:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      nsfw:
+        example: false
+        type: boolean
+    type: object
   httputil.HTTPError:
     properties:
       message:
         example: Bad Request
         type: string
+    type: object
+  images.Image:
+    properties:
+      buffer_size:
+        example: 402123
+        type: number
+      buffer_size_crop:
+        example: 72288
+        type: number
+      character_id:
+        example: 10739
+        type: integer
+      file_type:
+        example: png
+        type: string
+      height:
+        example: 2670
+        type: number
+      id:
+        example: 187840
+        type: integer
+      image_url:
+        example: ' https://cdn.bongo.best/characters/10739/6ae0800a-e3d8-43e2-b783-9eeb595fa30d.jpg'
+        type: string
+      image_url_crop:
+        example: https://cdn.bongo.best/characters/187840/ab9b6e58-a055-4702-879a-7f3300c771f5.jpg
+        type: string
+      nsfw:
+        example: false
+        type: boolean
+      width:
+        example: 2420
+        type: number
     type: object
 info:
   contact:
@@ -144,6 +195,8 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Gets a character based off the user's query parameters.
+      tags:
+      - Character
   /characters/{id}:
     get:
       description: get character metadata by id
@@ -173,9 +226,56 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Gets a character by the ID
+      tags:
+      - Character
+  /characters/{id}/images:
+    get:
+      description: Get the character's images between the requested offset and limit with the requested ID.
+      parameters:
+      - description: Some ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: limit 1-10; Default 10
+        in: query
+        name: limit
+        type: integer
+      - description: the offset for the images for pagination
+        in: query
+        name: offset
+        type: integer
+      - description: whether the image is nsfw or not
+        in: query
+        name: nsfw
+        type: boolean
+      - description: filter down by cropped images only
+        in: query
+        name: crop
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/characters.CharacterImage'
+            type: array
+        "400":
+          description: Invalid offset provided. Offset must be a valid number and greater than 0
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: An unexpected error has occurred when retrieving the images
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets a character's image based off the character's ID, offset, and limit
+      tags:
+      - Character
   /characters/random:
     get:
-      description: Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
+      description: Get a random character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
       parameters:
       - description: limit 1-20; Default 1
         in: query
@@ -206,5 +306,40 @@ paths:
           description: An unexpected error has occurred when retrieving the character
           schema:
             $ref: '#/definitions/httputil.HTTPError'
-      summary: Gets a character based off the user's query parameters.
+      summary: Gets a random character based off the user's query parameters.
+      tags:
+      - Character
+  /images/{id}:
+    get:
+      description: Get detailed information on an image metadata based off the provided ID.
+      parameters:
+      - description: Some ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/images.Image'
+            type: array
+        "400":
+          description: Must have a valid id parameter
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Image not found with id some ID
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: An unexpected error has occurred when retrieving the images for the character
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets an image's metadata based off the provided ID.
+      tags:
+      - Images
 swagger: "2.0"

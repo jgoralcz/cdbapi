@@ -26,10 +26,10 @@ func Routes() *echo.Echo {
 			characters.GET("/:id", handlers.CharacterByID)
 			characters.GET("", handlers.Character)
 		}
-		// images := v1.Group("/images")
-		// {
-		// 	images.GET("/:id", handlers.Image)
-		// }
+		images := v1.Group("/images")
+		{
+			images.GET("/:id", handlers.ImageByID)
+		}
 		// series := v1.Group("/series")
 	}
 

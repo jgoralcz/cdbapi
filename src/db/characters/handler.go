@@ -106,7 +106,7 @@ func handleRow(row pgx.Row) string {
 	)
 
 	if err != nil && err != sql.ErrNoRows {
-		return "[]"
+		return "{}"
 	}
 
 	if err != nil {
@@ -142,7 +142,6 @@ func handleBasicImage(rows pgx.Rows) string {
 
 		images = append(images, *i)
 	}
-	log.Println(images)
 
 	imageJSON, marshalErr := json.Marshal(images)
 	if marshalErr != nil {

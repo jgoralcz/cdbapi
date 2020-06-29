@@ -35,6 +35,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Character"
+                ],
                 "summary": "Gets a character based off the user's query parameters.",
                 "parameters": [
                     {
@@ -96,11 +99,14 @@ var doc = `{
         },
         "/characters/random": {
             "get": {
-                "description": "Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).",
+                "description": "Get a random character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Gets a character based off the user's query parameters.",
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Gets a random character based off the user's query parameters.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -152,6 +158,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Character"
+                ],
                 "summary": "Gets a character by the ID",
                 "parameters": [
                     {
@@ -183,6 +192,124 @@ var doc = `{
                     },
                     "500": {
                         "description": "An unexpected error has occurred when retrieving the character with id Some ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/characters/{id}/images": {
+            "get": {
+                "description": "Get the character's images between the requested offset and limit with the requested ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Gets a character's image based off the character's ID, offset, and limit",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Some ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit 1-10; Default 10",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "the offset for the images for pagination",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the image is nsfw or not",
+                        "name": "nsfw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "filter down by cropped images only",
+                        "name": "crop",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/characters.CharacterImage"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid offset provided. Offset must be a valid number and greater than 0",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when retrieving the images",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/images/{id}": {
+            "get": {
+                "description": "Get detailed information on an image metadata based off the provided ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Gets an image's metadata based off the provided ID.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Some ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/images.Image"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Must have a valid id parameter",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Image not found with id some ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when retrieving the images for the character",
                         "schema": {
                             "$ref": "#/definitions/httputil.HTTPError"
                         }
@@ -266,7 +393,7 @@ var doc = `{
                     "type": "string",
                     "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
                 },
-                "image_url_clean": {
+                "image_url_crop": {
                     "type": "string",
                     "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
                 },
@@ -308,12 +435,82 @@ var doc = `{
                 }
             }
         },
+        "characters.CharacterImage": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "example": 7960
+                },
+                "image_id": {
+                    "type": "integer",
+                    "example": 1234
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
+                },
+                "image_url_crop": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
+                },
+                "nsfw": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
         "httputil.HTTPError": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string",
                     "example": "Bad Request"
+                }
+            }
+        },
+        "images.Image": {
+            "type": "object",
+            "properties": {
+                "buffer_size": {
+                    "type": "number",
+                    "example": 402123
+                },
+                "buffer_size_crop": {
+                    "type": "number",
+                    "example": 72288
+                },
+                "character_id": {
+                    "type": "integer",
+                    "example": 10739
+                },
+                "file_type": {
+                    "type": "string",
+                    "example": "png"
+                },
+                "height": {
+                    "type": "number",
+                    "example": 2670
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 187840
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": " https://cdn.bongo.best/characters/10739/6ae0800a-e3d8-43e2-b783-9eeb595fa30d.jpg"
+                },
+                "image_url_crop": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/characters/187840/ab9b6e58-a055-4702-879a-7f3300c771f5.jpg"
+                },
+                "nsfw": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "width": {
+                    "type": "number",
+                    "example": 2420
                 }
             }
         }
