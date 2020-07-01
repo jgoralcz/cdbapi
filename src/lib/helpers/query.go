@@ -7,6 +7,10 @@ import "strconv"
 // If it is not an integer it will default to the default value.
 // If it is above the max limit, the provided maxLimit will be used.
 func MaxLimit(userLimit string, defaultLimit int, maxLimit int) int {
+	if len(userLimit) > 5 {
+		return defaultLimit
+	}
+
 	limit, err := strconv.Atoi(userLimit)
 
 	if err != nil || limit < defaultLimit {
@@ -34,6 +38,10 @@ func DefaultBoolean(userBool string) string {
 // the default int is used. When the value cannot be converted, -1 is returned.
 // Otherwise the parsed string is converted to an int and returned.
 func DefaultNumber(value string, defaultValue int) int {
+	if len(value) > 5 {
+		return -1
+	}
+
 	if value == "" {
 		return defaultValue
 	}
