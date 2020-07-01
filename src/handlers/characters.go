@@ -73,22 +73,16 @@ func CharacterImages(c echo.Context) (err error) {
 	}
 
 	strLimit := c.QueryParam("limit")
-	if strLimit == "" {
-		strLimit = "10"
-	}
-	limit, err := strconv.Atoi(strLimit)
+	limit := helpers.DefaultNumber(strLimit, 10)
 
-	if err != nil || limit > 10 || limit < 1 {
+	if limit == -1 || limit > 10 || limit < 1 {
 		return &echo.HTTPError{Code: 400, Message: "Invalid limit provided. Limit must be a valid number less than 10 and greater than 0"}
 	}
 
 	strOffset := c.QueryParam("offset")
-	if strOffset == "" {
-		strOffset = "0"
-	}
-	offset, err := strconv.Atoi(strOffset)
+	offset := helpers.DefaultNumber(strOffset, 0)
 
-	if err != nil || offset < 0 {
+	if offset == -1 || offset < 0 {
 		return &echo.HTTPError{Code: 400, Message: "Invalid offset provided. Offset must be a valid number and greater than 0"}
 	}
 

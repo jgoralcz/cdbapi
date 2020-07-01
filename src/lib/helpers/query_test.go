@@ -133,3 +133,32 @@ func BenchmarkDefaultBoolean4096String(b *testing.B) {
 		DefaultBoolean(str4096)
 	}
 }
+
+// DefaultNumber
+
+func TestDefaultNumberEmptyString(t *testing.T) {
+	queryValue := ""
+	expected := 1
+
+	received := DefaultNumber(queryValue, expected)
+
+	if received != expected {
+		t.Errorf("DefaultNumber(%v, %v) failed. Expected %v, Received %v", queryValue, expected, expected, received)
+	} else {
+		t.Logf("DefaultNumber(%v, %d) passed.", queryValue, expected)
+	}
+}
+
+func TestDefaultNumberNotNumber(t *testing.T) {
+	queryValue := "uh oh breaking time?"
+	defaultValue := 10
+	expected := -1
+
+	received := DefaultNumber(queryValue, defaultValue)
+
+	if received != expected {
+		t.Errorf("DefaultNumber(%v, %v) failed. Expected %v, Received %v", queryValue, defaultValue, expected, received)
+	} else {
+		t.Logf("DefaultNumber(%v, %d) passed.", queryValue, defaultValue)
+	}
+}

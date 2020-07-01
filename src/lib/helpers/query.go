@@ -29,3 +29,19 @@ func DefaultBoolean(userBool string) string {
 	}
 	return userBool
 }
+
+// DefaultNumber receives a value and defaultValue. When the value is an empty string,
+// the default int is used. When the value cannot be converted, -1 is returned.
+// Otherwise the parsed string is converted to an int and returned.
+func DefaultNumber(value string, defaultValue int) int {
+	if value == "" {
+		return defaultValue
+	}
+
+	valueInt, err := strconv.Atoi(value)
+	if err != nil {
+		return -1
+	}
+
+	return valueInt
+}
