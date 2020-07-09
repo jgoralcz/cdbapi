@@ -116,6 +116,18 @@ func TestDefaultBooleanFalseString(t *testing.T) {
 	}
 }
 
+func TestDefaultBooleanFalseUpperCaseString(t *testing.T) {
+	expected := "false"
+
+	boolStr := DefaultBoolean("FaLsE")
+
+	if boolStr != expected {
+		t.Errorf("DefaultBoolean(\"FaLsE\") failed. Expected %v, Received %v", expected, boolStr)
+	} else {
+		t.Logf("DefaultBoolean(\"FaLsE\") passed.")
+	}
+}
+
 func TestDefaultBooleanAnyString(t *testing.T) {
 	expected := ""
 

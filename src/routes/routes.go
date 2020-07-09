@@ -26,11 +26,23 @@ func Routes() *echo.Echo {
 			characters.GET("/:id", handlers.CharacterByID)
 			characters.GET("", handlers.Character)
 		}
+
 		images := v1.Group("/images")
 		{
 			images.GET("/:id", handlers.ImageByID)
 		}
-		// series := v1.Group("/series")
+
+		series := v1.Group("/series")
+		{
+			series.GET("/random", handlers.SeriesRandom)
+			series.GET("/:id", handlers.SeriesByID)
+			series.GET("", handlers.Series)
+		}
+
+		search := v1.Group("/search")
+		{
+			search.GET("", handlers.Search)
+		}
 	}
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

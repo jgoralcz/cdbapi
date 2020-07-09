@@ -1,6 +1,9 @@
 package helpers
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 // MaxLimit receives a user input string and decides whether
 // it is an integer and between the default value and max value.
@@ -28,10 +31,16 @@ func MaxLimit(userLimit string, defaultLimit int, maxLimit int) int {
 // it is a valid boolean (true or false). If it is not a boolean then
 // an empty string is used
 func DefaultBoolean(userBool string) string {
-	if userBool != "true" && userBool != "false" {
+	if len(userBool) > 5 {
 		return ""
 	}
-	return userBool
+
+	lowerStr := strings.ToLower(userBool)
+
+	if lowerStr != "true" && lowerStr != "false" {
+		return ""
+	}
+	return lowerStr
 }
 
 // DefaultNumber receives a value and defaultValue. When the value is an empty string,

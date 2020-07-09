@@ -316,6 +316,176 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/series": {
+            "get": {
+                "description": "Get series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Series"
+                ],
+                "summary": "Gets a series based off the user's query parameters.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name to search",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit 1-20; Default 1",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is nsfw or not",
+                        "name": "nsfw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is western (Cartoon) or not (Anime)",
+                        "name": "western",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is from a game or not",
+                        "name": "game",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/series.Series"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Must have a valid name query parameter",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when retrieving the series",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/series/random": {
+            "get": {
+                "description": "Get a random series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Series"
+                ],
+                "summary": "Gets a random series based off the user's query parameters.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit 1-20; Default 1",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is nsfw or not",
+                        "name": "nsfw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is western (Cartoon) or not (Anime)",
+                        "name": "western",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the series is from a game or not",
+                        "name": "game",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/series.Series"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when retrieving the series",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/series/{id}": {
+            "get": {
+                "description": "get series metadata by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Series"
+                ],
+                "summary": "Gets a series by the ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Some ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/series.Series"
+                        }
+                    },
+                    "400": {
+                        "description": "Must have a valid id parameter",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Could not find a series with id Some ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when retrieving the series with id Some ID",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -407,7 +577,7 @@ var doc = `{
                 },
                 "origin": {
                     "type": "string",
-                    "example": "VelvetRoom"
+                    "example": "Velvet Room"
                 },
                 "original_name": {
                     "type": "string",
@@ -513,6 +683,43 @@ var doc = `{
                     "example": 2420
                 }
             }
+        },
+        "series.Series": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Flight Rising is a free Virtual Pet/breeding sim focusing on dragons. It launched on June 9th, 2013, following a wildly successful Kickstarter campaign."
+                },
+                "game": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 4731
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/series/4731/e1dcff95-fa7c-4995-92f2-b9dc9840ffe1.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Flight Rising"
+                },
+                "nsfw": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "original_name": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "western": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
         }
     }
 }`
@@ -533,7 +740,7 @@ var SwaggerInfo = swaggerInfo{
 	BasePath:    "/api/v1",
 	Schemes:     []string{},
 	Title:       "Character Database (Go CDBAPI)",
-	Description: "Character Database is a simple example of golang using Echo and interacting with a PostgreSQL database.",
+	Description: "Character Database is a golang API used to get characters, series, and images stored in a PostgreSQL database.",
 }
 
 type s struct{}

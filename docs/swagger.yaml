@@ -64,7 +64,7 @@ definitions:
         example: false
         type: boolean
       origin:
-        example: VelvetRoom
+        example: Velvet Room
         type: string
       original_name:
         example: "null"
@@ -142,11 +142,38 @@ definitions:
         example: 2420
         type: number
     type: object
+  series.Series:
+    properties:
+      description:
+        example: Flight Rising is a free Virtual Pet/breeding sim focusing on dragons. It launched on June 9th, 2013, following a wildly successful Kickstarter campaign.
+        type: string
+      game:
+        example: true
+        type: boolean
+      id:
+        example: 4731
+        type: integer
+      image_url:
+        example: https://cdn.bongo.best/series/4731/e1dcff95-fa7c-4995-92f2-b9dc9840ffe1.png
+        type: string
+      name:
+        example: Flight Rising
+        type: string
+      nsfw:
+        example: false
+        type: boolean
+      original_name:
+        example: "null"
+        type: string
+      western:
+        example: true
+        type: boolean
+    type: object
 info:
   contact:
     name: jgoralcz
     url: https://github.com/jgoralcz/cdbapi
-  description: Character Database is a simple example of golang using Echo and interacting with a PostgreSQL database.
+  description: Character Database is a golang API used to get characters, series, and images stored in a PostgreSQL database.
   license: {}
   termsOfService: http://swagger.io/terms/
   title: Character Database (Go CDBAPI)
@@ -342,4 +369,116 @@ paths:
       summary: Gets an image's metadata based off the provided ID.
       tags:
       - Images
+  /series:
+    get:
+      description: Get series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
+      parameters:
+      - description: name to search
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: limit 1-20; Default 1
+        in: query
+        name: limit
+        type: integer
+      - description: whether the series is nsfw or not
+        in: query
+        name: nsfw
+        type: boolean
+      - description: whether the series is western (Cartoon) or not (Anime)
+        in: query
+        name: western
+        type: boolean
+      - description: whether the series is from a game or not
+        in: query
+        name: game
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/series.Series'
+            type: array
+        "400":
+          description: Must have a valid name query parameter
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: An unexpected error has occurred when retrieving the series
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets a series based off the user's query parameters.
+      tags:
+      - Series
+  /series/{id}:
+    get:
+      description: get series metadata by id
+      parameters:
+      - description: Some ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/series.Series'
+        "400":
+          description: Must have a valid id parameter
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Could not find a series with id Some ID
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: An unexpected error has occurred when retrieving the series with id Some ID
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets a series by the ID
+      tags:
+      - Series
+  /series/random:
+    get:
+      description: Get a random series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
+      parameters:
+      - description: limit 1-20; Default 1
+        in: query
+        name: limit
+        type: integer
+      - description: whether the series is nsfw or not
+        in: query
+        name: nsfw
+        type: boolean
+      - description: whether the series is western (Cartoon) or not (Anime)
+        in: query
+        name: western
+        type: boolean
+      - description: whether the series is from a game or not
+        in: query
+        name: game
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/series.Series'
+            type: array
+        "500":
+          description: An unexpected error has occurred when retrieving the series
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets a random series based off the user's query parameters.
+      tags:
+      - Series
 swagger: "2.0"

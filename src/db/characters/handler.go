@@ -15,7 +15,7 @@ type Character struct {
 	Name         string      `json:"name" example:"Marie"`
 	Description  null.String `json:"description" example:"Marie is an assistant of the Velvet Room in Persona 4 Golden. When Marie is first met, she seems to be a very cold and antisocial individual. She is sullen, cranky, sarcastic, irritable, very foul-mouthed and often prone to mood swings. She will not hesitate to voice out her opinion or express her thoughts, regardless of how it would make everyone feel. Marie sometimes expresses her thoughts in poems which often deal with depressing themes like farewells and existentialism, questioning her own origin. Besides this, Marie is into fashion, loves nature (another major theme in her poems) and is apparently concerned about her figure, which is why she only eats healthy food."`
 	OriginalName null.String `json:"original_name" example:"null"`
-	Origin       null.String `json:"origin" example:"VelvetRoom"`
+	Origin       null.String `json:"origin" example:"Velvet Room"`
 	ImageURL     null.String `json:"image_url" example:"https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"`
 	ImageURLCrop null.String `json:"image_url_crop" example:"https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"`
 	Nsfw         bool        `json:"nsfw" example:"false"`
@@ -55,7 +55,8 @@ type CharacterImage struct {
 }
 
 func handleRows(rows pgx.Rows) string {
-	if rows == nil {
+	rowsErr := rows.Err()
+	if rows == nil && rowsErr == nil {
 		return "[]"
 	}
 
@@ -86,7 +87,6 @@ func handleRows(rows pgx.Rows) string {
 		return ""
 	}
 
-	rowsErr := rows.Err()
 	if rowsErr != nil {
 		log.Println(rowsErr)
 		return ""

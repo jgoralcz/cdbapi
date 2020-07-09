@@ -6,6 +6,6 @@ import (
 
 // GetImageByID gets the image information based off the user's input for an ID.
 func GetImageByID(id int) string {
-	row := db.PoolQueryRow(ImageByID, id)
+	row := db.PoolQueryRow(imageByID, id)
 	return handleRow(row)
 }
