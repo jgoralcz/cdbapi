@@ -301,6 +301,74 @@
                 }
             }
         },
+        "/search": {
+            "get": {
+                "description": "Search all resources by name (string), nsfw (boolean), game (boolean), western (boolean), limit (1-5), name (string). You must use name to get a result back.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Gets a \"search\" based off the user's query parameters.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name to search",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit 1-5; Default 5",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the search is nsfw or not",
+                        "name": "nsfw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the search is western (Cartoon) or not (Anime)",
+                        "name": "western",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "whether the search is from a game or not",
+                        "name": "game",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/search.Search"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Must have a valid name query parameter",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error has occurred when searching",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/series": {
             "get": {
                 "description": "Get series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.",
@@ -665,6 +733,97 @@
                 "width": {
                     "type": "number",
                     "example": 2420
+                }
+            }
+        },
+        "search.Search": {
+            "type": "object",
+            "properties": {
+                "characters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/search.character"
+                    }
+                },
+                "series": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/search.series"
+                    }
+                }
+            }
+        },
+        "search.character": {
+            "type": "object",
+            "properties": {
+                "game": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 7960
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
+                },
+                "image_url_crop": {
+                    "type": "string",
+                    "example": "https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Marie"
+                },
+                "nsfw": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "original_name": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "series": {
+                    "type": "string",
+                    "example": "Persona 4"
+                },
+                "series_id": {
+                    "type": "integer",
+                    "example": 2240
+                },
+                "series_nsfw": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "western": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "search.series": {
+            "type": "object",
+            "properties": {
+                "game": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 4731
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Flight Rising"
+                },
+                "nsfw": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "western": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },

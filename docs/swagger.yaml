@@ -142,6 +142,71 @@ definitions:
         example: 2420
         type: number
     type: object
+  search.Search:
+    properties:
+      characters:
+        items:
+          $ref: '#/definitions/search.character'
+        type: array
+      series:
+        items:
+          $ref: '#/definitions/search.series'
+        type: array
+    type: object
+  search.character:
+    properties:
+      game:
+        example: false
+        type: boolean
+      id:
+        example: 7960
+        type: integer
+      image_url:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      image_url_crop:
+        example: https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png
+        type: string
+      name:
+        example: Marie
+        type: string
+      nsfw:
+        example: false
+        type: boolean
+      original_name:
+        example: "null"
+        type: string
+      series:
+        example: Persona 4
+        type: string
+      series_id:
+        example: 2240
+        type: integer
+      series_nsfw:
+        example: false
+        type: boolean
+      western:
+        example: false
+        type: boolean
+    type: object
+  search.series:
+    properties:
+      game:
+        example: true
+        type: boolean
+      id:
+        example: 4731
+        type: integer
+      name:
+        example: Flight Rising
+        type: string
+      nsfw:
+        example: false
+        type: boolean
+      western:
+        example: true
+        type: boolean
+    type: object
   series.Series:
     properties:
       description:
@@ -369,6 +434,51 @@ paths:
       summary: Gets an image's metadata based off the provided ID.
       tags:
       - Images
+  /search:
+    get:
+      description: Search all resources by name (string), nsfw (boolean), game (boolean), western (boolean), limit (1-5), name (string). You must use name to get a result back.
+      parameters:
+      - description: name to search
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: limit 1-5; Default 5
+        in: query
+        name: limit
+        type: integer
+      - description: whether the search is nsfw or not
+        in: query
+        name: nsfw
+        type: boolean
+      - description: whether the search is western (Cartoon) or not (Anime)
+        in: query
+        name: western
+        type: boolean
+      - description: whether the search is from a game or not
+        in: query
+        name: game
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/search.Search'
+            type: array
+        "400":
+          description: Must have a valid name query parameter
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: An unexpected error has occurred when searching
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Gets a "search" based off the user's query parameters.
+      tags:
+      - Search
   /series:
     get:
       description: Get series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
