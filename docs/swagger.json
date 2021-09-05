@@ -8,7 +8,6 @@
             "name": "jgoralcz",
             "url": "https://github.com/jgoralcz/cdbapi"
         },
-        "license": {},
         "version": "1.0"
     },
     "basePath": "/api/v1",
@@ -626,14 +625,6 @@
                 "nsfw": {
                     "type": "boolean",
                     "example": false
-                },
-                "origin": {
-                    "type": "string",
-                    "example": "Velvet Room"
-                },
-                "original_name": {
-                    "type": "string",
-                    "example": "null"
                 },
                 "series": {
                     "type": "string",

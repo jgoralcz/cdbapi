@@ -53,3 +53,5 @@ swag init
 go env
 
 copy files to docs/
+
+You can then view the docs at `${URL}/swagger/index.html`

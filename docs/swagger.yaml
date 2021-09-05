@@ -37,7 +37,16 @@ definitions:
         example: "null"
         type: string
       description:
-        example: Marie is an assistant of the Velvet Room in Persona 4 Golden. When Marie is first met, she seems to be a very cold and antisocial individual. She is sullen, cranky, sarcastic, irritable, very foul-mouthed and often prone to mood swings. She will not hesitate to voice out her opinion or express her thoughts, regardless of how it would make everyone feel. Marie sometimes expresses her thoughts in poems which often deal with depressing themes like farewells and existentialism, questioning her own origin. Besides this, Marie is into fashion, loves nature (another major theme in her poems) and is apparently concerned about her figure, which is why she only eats healthy food.
+        example: Marie is an assistant of the Velvet Room in Persona 4 Golden. When
+          Marie is first met, she seems to be a very cold and antisocial individual.
+          She is sullen, cranky, sarcastic, irritable, very foul-mouthed and often
+          prone to mood swings. She will not hesitate to voice out her opinion or
+          express her thoughts, regardless of how it would make everyone feel. Marie
+          sometimes expresses her thoughts in poems which often deal with depressing
+          themes like farewells and existentialism, questioning her own origin. Besides
+          this, Marie is into fashion, loves nature (another major theme in her poems)
+          and is apparently concerned about her figure, which is why she only eats
+          healthy food.
         type: string
       game:
         example: false
@@ -63,12 +72,6 @@ definitions:
       nsfw:
         example: false
         type: boolean
-      origin:
-        example: Velvet Room
-        type: string
-      original_name:
-        example: "null"
-        type: string
       series:
         example: Persona 4
         type: string
@@ -210,7 +213,9 @@ definitions:
   series.Series:
     properties:
       description:
-        example: Flight Rising is a free Virtual Pet/breeding sim focusing on dragons. It launched on June 9th, 2013, following a wildly successful Kickstarter campaign.
+        example: Flight Rising is a free Virtual Pet/breeding sim focusing on dragons.
+          It launched on June 9th, 2013, following a wildly successful Kickstarter
+          campaign.
         type: string
       game:
         example: true
@@ -238,15 +243,17 @@ info:
   contact:
     name: jgoralcz
     url: https://github.com/jgoralcz/cdbapi
-  description: Character Database is a golang API used to get characters, series, and images stored in a PostgreSQL database.
-  license: {}
+  description: Character Database is a golang API used to get characters, series,
+    and images stored in a PostgreSQL database.
   termsOfService: http://swagger.io/terms/
   title: Character Database (Go CDBAPI)
   version: "1.0"
 paths:
   /characters:
     get:
-      description: Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
+      description: Get character metadata by nsfw (boolean), game (boolean), western
+        (boolean), limit (1-20), name (string). You must use name to get a result
+        back.
       parameters:
       - description: name to search
         in: query
@@ -314,7 +321,8 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "500":
-          description: An unexpected error has occurred when retrieving the character with id Some ID
+          description: An unexpected error has occurred when retrieving the character
+            with id Some ID
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Gets a character by the ID
@@ -322,7 +330,8 @@ paths:
       - Character
   /characters/{id}/images:
     get:
-      description: Get the character's images between the requested offset and limit with the requested ID.
+      description: Get the character's images between the requested offset and limit
+        with the requested ID.
       parameters:
       - description: Some ID
         in: path
@@ -355,19 +364,22 @@ paths:
               $ref: '#/definitions/characters.CharacterImage'
             type: array
         "400":
-          description: Invalid offset provided. Offset must be a valid number and greater than 0
+          description: Invalid offset provided. Offset must be a valid number and
+            greater than 0
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "500":
           description: An unexpected error has occurred when retrieving the images
           schema:
             $ref: '#/definitions/httputil.HTTPError'
-      summary: Gets a character's image based off the character's ID, offset, and limit
+      summary: Gets a character's image based off the character's ID, offset, and
+        limit
       tags:
       - Character
   /characters/random:
     get:
-      description: Get a random character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
+      description: Get a random character metadata by nsfw (boolean), game (boolean),
+        western (boolean), limit (1-20).
       parameters:
       - description: limit 1-20; Default 1
         in: query
@@ -403,7 +415,8 @@ paths:
       - Character
   /images/{id}:
     get:
-      description: Get detailed information on an image metadata based off the provided ID.
+      description: Get detailed information on an image metadata based off the provided
+        ID.
       parameters:
       - description: Some ID
         in: path
@@ -428,7 +441,8 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "500":
-          description: An unexpected error has occurred when retrieving the images for the character
+          description: An unexpected error has occurred when retrieving the images
+            for the character
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Gets an image's metadata based off the provided ID.
@@ -436,7 +450,9 @@ paths:
       - Images
   /search:
     get:
-      description: Search all resources by name (string), nsfw (boolean), game (boolean), western (boolean), limit (1-5), name (string). You must use name to get a result back.
+      description: Search all resources by name (string), nsfw (boolean), game (boolean),
+        western (boolean), limit (1-5), name (string). You must use name to get a
+        result back.
       parameters:
       - description: name to search
         in: query
@@ -481,7 +497,9 @@ paths:
       - Search
   /series:
     get:
-      description: Get series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
+      description: Get series metadata by nsfw (boolean), game (boolean), western
+        (boolean), limit (1-20), name (string). You must use name to get a result
+        back.
       parameters:
       - description: name to search
         in: query
@@ -549,7 +567,8 @@ paths:
           schema:
             $ref: '#/definitions/httputil.HTTPError'
         "500":
-          description: An unexpected error has occurred when retrieving the series with id Some ID
+          description: An unexpected error has occurred when retrieving the series
+            with id Some ID
           schema:
             $ref: '#/definitions/httputil.HTTPError'
       summary: Gets a series by the ID
@@ -557,7 +576,8 @@ paths:
       - Series
   /series/random:
     get:
-      description: Get a random series metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20).
+      description: Get a random series metadata by nsfw (boolean), game (boolean),
+        western (boolean), limit (1-20).
       parameters:
       - description: limit 1-20; Default 1
         in: query

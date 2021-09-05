@@ -13,9 +13,9 @@ import (
 type Series struct {
 	ID           int         `json:"id" example:"4731"`
 	Name         string      `json:"name" example:"Flight Rising"`
-	Description  null.String `json:"description" example:"Flight Rising is a free Virtual Pet/breeding sim focusing on dragons. It launched on June 9th, 2013, following a wildly successful Kickstarter campaign."`
-	OriginalName null.String `json:"original_name" example:"null"`
-	ImageURL     null.String `json:"image_url" example:"https://cdn.bongo.best/series/4731/e1dcff95-fa7c-4995-92f2-b9dc9840ffe1.png"`
+	Description  null.String `json:"description" swaggertype:"string" example:"Flight Rising is a free Virtual Pet/breeding sim focusing on dragons. It launched on June 9th, 2013, following a wildly successful Kickstarter campaign."`
+	OriginalName null.String `json:"original_name" swaggertype:"string" example:"null"`
+	ImageURL     null.String `json:"image_url" swaggertype:"string" example:"https://cdn.bongo.best/series/4731/e1dcff95-fa7c-4995-92f2-b9dc9840ffe1.png"`
 	Nsfw         bool        `json:"nsfw" example:"false"`
 	Game         bool        `json:"game" example:"true"`
 	Western      bool        `json:"western" example:"true"`
