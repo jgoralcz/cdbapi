@@ -5,6 +5,8 @@ You can use the live instance at `beta-${URL}/v1`
 
 Docs are available at: `${URL}/swagger/index.html`
 
+Side Note: Images, characters, and series are updated every day. We could use your help. Please join the official Bongo Bot support server for help: https://discord.gg/dfajqcZ
+
 <br/>
 <br/>
 <br/>
@@ -69,3 +71,5 @@ If you want godocs on an api, clone the repo and run like so:
 1. Interesting way to scrape godocs
     1. `https://pkg.go.dev/golang.org/x/tools/cmd/godoc?tab=overview`
     1. `godoc -http=:6060 & wget -e robots=off -r -np -N -E -p -k`
+1. Stress Testing
+    1. https://medium.com/@harrietty/load-testing-an-api-with-apache-benchmark-or-jmeter-24cfe39d3a23

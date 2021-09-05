@@ -62,10 +62,27 @@ func handleRows(rows pgx.Rows) string {
 	for rows.Next() {
 		c := new(Character)
 		err := rows.Scan(
-			&c.ID, &c.Name, &c.Description, &c.ImageURL, &c.ImageURLCrop, &c.Nsfw, &c.SeriesNsfw, &c.Game, &c.Western, &c.Series,
-			&c.SeriesID, &c.Age, &c.DateOfBirth, &c.HipCM, &c.BustCM, &c.WeightKG,
-			&c.HeightCM, &c.BloodType, &c.AppearsIn,
+			&c.ID,
+			&c.Name,
+			&c.Description,
+			&c.ImageURL,
+			&c.ImageURLCrop,
+			&c.Nsfw,
+			&c.SeriesNsfw,
+			&c.Game,
+			&c.Western,
+			&c.Series,
+			&c.SeriesID,
+			&c.Age,
+			&c.DateOfBirth,
+			&c.HipCM,
+			&c.BustCM,
+			&c.WeightKG,
+			&c.HeightCM,
+			&c.BloodType,
+			&c.AppearsIn,
 		)
+
 		if err != nil {
 			log.Println(err)
 			break
@@ -96,9 +113,25 @@ func handleRow(row pgx.Row) string {
 	c := new(Character)
 
 	err := row.Scan(
-		&c.ID, &c.Name, &c.Description, &c.ImageURL, &c.ImageURLCrop, &c.Nsfw, &c.SeriesNsfw, &c.Game, &c.Western, &c.Series,
-		&c.SeriesID, &c.Age, &c.DateOfBirth, &c.HipCM, &c.BustCM, &c.WeightKG,
-		&c.HeightCM, &c.BloodType, &c.AppearsIn,
+		&c.ID,
+		&c.Name,
+		&c.Description,
+		&c.ImageURL,
+		&c.ImageURLCrop,
+		&c.Nsfw,
+		&c.SeriesNsfw,
+		&c.Game,
+		&c.Western,
+		&c.Series,
+		&c.SeriesID,
+		&c.Age,
+		&c.DateOfBirth,
+		&c.HipCM,
+		&c.BustCM,
+		&c.WeightKG,
+		&c.HeightCM,
+		&c.BloodType,
+		&c.AppearsIn,
 	)
 
 	if err != nil && err != sql.ErrNoRows {

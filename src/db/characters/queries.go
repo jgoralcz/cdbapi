@@ -1,7 +1,7 @@
 package characters
 
 var characterSearch = `
-SELECT id, name, description, original_name, origin, image_url, image_url_clean AS image_url_crop, nsfw, "seriesNsfw",
+SELECT id, name, description image_url, image_url_clean AS image_url_crop, nsfw, "seriesNsfw",
 	is_game AS game, is_western AS western, series, series_id, age, date_of_birth, hip_cm,
 	bust_cm, weight_kg, height_cm, blood_type,
 	(
@@ -17,15 +17,13 @@ SELECT id, name, description, original_name, origin, image_url, image_url_clean 
 		) item
 	) AS appears_in
   FROM (
-		SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean, ws.nsfw,
+		SELECT ws.id, ws.name, ws.description, ws.image_url, ws.image_url_clean, ws.nsfw,
 			wsst.nsfw AS "seriesNsfw", wsst.is_game, wsst.is_western, wsst.name AS series, ws.series_id, ws.age, ws.date_of_birth,
 			ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type
 		FROM waifu_schema.waifu_table ws
 		JOIN waifu_schema.series_table wsst ON wsst.id = ws.series_id
     WHERE (
 			ws.name ILIKE '%' || $1 || '%' OR levenshtein(ws.name, $1) <= 2
-      OR (ws.original_name ILIKE '%' || $1 || '%' AND ws.original_name IS NOT NULL)
-			OR (ws.romaji_name ILIKE '%' || $1 || '%' AND ws.romaji_name IS NOT NULL)
 		)
 		AND (
 			('false' = $3 AND ws.nsfw = FALSE)
@@ -54,29 +52,24 @@ SELECT id, name, description, original_name, origin, image_url, image_url_clean 
       WHEN ws.name ILIKE '%' || $1 || '%' THEN 2
       WHEN ws.romaji_name ILIKE $1 THEN 3
       WHEN ws.romaji_name ILIKE $1 || '%' THEN 4
-      WHEN ws.original_name ILIKE $1 THEN 5
-      WHEN ws.original_name ILIKE $1 || '%' THEN 6
       WHEN levenshtein(ws.name, $1) <= 1 THEN 7
-      ELSE 8 END, ws.name, ws.romaji_name, ws.original_name
+      ELSE 8 END, ws.name
     LIMIT $2
   ) wt
   ORDER BY
     CASE
     WHEN wt.name ILIKE $1 THEN 0
-    WHEN wt.original_name ILIKE $1 THEN 1
     WHEN $1 ILIKE ANY (
       SELECT UNNEST(string_to_array(wt.name, ' ')) AS name
     ) THEN 2
     WHEN wt.name ILIKE $1 || '%' THEN 3
     WHEN wt.name ILIKE '%' || $1 || '%' THEN 4
-    WHEN wt.original_name ILIKE $1 THEN 5
-    WHEN wt.original_name ILIKE $1 || '%' THEN 6
     WHEN levenshtein(wt.name, $1) <= 1 THEN 7
-    ELSE 8 END, wt.name, wt.original_name
+    ELSE 8 END, wt.name
   LIMIT $2;
 `
 var characterRandom = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean AS image_url_crop, 
+SELECT ws.id, ws.name, ws.description, ws.image_url, ws.image_url_clean AS image_url_crop, 
 	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
 	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
 	(
@@ -130,7 +123,7 @@ LIMIT $1;
 `
 
 var characterByID = `
-SELECT ws.id, ws.name, ws.description, ws.original_name, ws.origin, ws.image_url, ws.image_url_clean AS image_url_crop,
+SELECT ws.id, ws.name, ws.description, ws.image_url, ws.image_url_clean AS image_url_crop,
 	ws.nsfw, wsst.nsfw AS "seriesNsfw", wsst.is_game AS game, wsst.is_western AS western, wsst.name AS series,
 	ws.series_id, ws.age, ws.date_of_birth, ws.hip_cm, ws.bust_cm, ws.weight_kg, ws.height_cm, ws.blood_type,
 	(

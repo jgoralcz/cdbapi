@@ -1,0 +1,2598 @@
+{
+	"info": {
+		"_postman_id": "7bf3c738-02dc-4f0d-b4d0-e904c785236d",
+		"name": "CDBAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "characters",
+			"item": [
+				{
+					"name": "images",
+					"item": [
+						{
+							"name": "character  id images",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Character ID is 1339\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = 1339;",
+											"",
+											"    jsonData.forEach(json => {",
+											"        pm.expect(json.character_id).to.equal(expected);",
+											"    })",
+											"});",
+											"",
+											"pm.test(\"Array with elements\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expectedLength = 10;",
+											"    var arrayLength = jsonData.length;",
+											"",
+											"    pm.expect(arrayLength).to.equal(expectedLength);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crop only",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Array with elements\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.length).to.be.above(0);",
+											"});",
+											"",
+											"pm.test(\"Character ID is 1339\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = 1339;",
+											"",
+											"    jsonData.forEach(json => {",
+											"        pm.expect(json.character_id).to.equal(expected);",
+											"    })",
+											"});",
+											"",
+											"pm.test(\"image_url_crop is not null\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = null;",
+											"",
+											"    jsonData.forEach(json => {",
+											"        pm.expect(json.character_id).to.not.equal(expected);",
+											"    })",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?offset=40&limit=10&crop=true",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "40"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "crop",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "id invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test('Validate message', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var message = jsonData.message;",
+											"    var expected = \"Must have a valid id parameter\";",
+											"",
+											"    pm.expect(message).to.be.equal(expected);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/oops/images",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"oops",
+										"images"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "limit greater than 10",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test('Validate message', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var message = jsonData.message;",
+											"    var expected = \"Invalid limit provided. Limit must be a valid number less than 10 and greater than 0\";",
+											"",
+											"    pm.expect(message).to.be.equal(expected);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?limit=100",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "limit less than 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test('Validate message', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var message = jsonData.message;",
+											"    var expected = \"Invalid limit provided. Limit must be a valid number less than 10 and greater than 0\";",
+											"",
+											"    pm.expect(message).to.be.equal(expected);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?limit=0",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "limit 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Array with elements\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expectedLength = 1;",
+											"    var arrayLength = jsonData.length;",
+											"",
+											"    pm.expect(arrayLength).to.equal(expectedLength);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?limit=1&offset=5",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sfw images",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Array with elements\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expectedLength = 10;",
+											"    var arrayLength = jsonData.length;",
+											"",
+											"    pm.expect(arrayLength).to.equal(expectedLength);",
+											"});",
+											"",
+											"pm.test('Validate nsfw is false', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = false;",
+											"",
+											"    jsonData.forEach(c => {",
+											"        pm.expect(c.nsfw).to.be.equal(expected);",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?nsfw=false",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "nsfw",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "nsfw images",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test('Validate nsfw is true', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = true;",
+											"",
+											"    jsonData.forEach(c => {",
+											"        pm.expect(c.nsfw).to.be.equal(expected);",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?nsfw=true",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "nsfw",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "offset 0",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Character ID is 1339\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expected = 1339;",
+											"",
+											"    jsonData.forEach(json => {",
+											"        pm.expect(json.character_id).to.equal(expected);",
+											"    })",
+											"});",
+											"",
+											"pm.test(\"Array with elements\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var expectedLength = 10;",
+											"    var arrayLength = jsonData.length;",
+											"",
+											"    pm.expect(arrayLength).to.equal(expectedLength);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?offset=0",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "offset -1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test('Validate message', function () {",
+											"    var jsonData = pm.response.json();",
+											"    var message = jsonData.message;",
+											"    var expected = \"Invalid offset provided. Offset must be a valid number and greater than 0\";",
+											"",
+											"    pm.expect(message).to.be.equal(expected);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"test\": \"Hell\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BONGO_IO_URL}}/v1/characters/1339/images?offset=-1",
+									"host": [
+										"{{BONGO_IO_URL}}"
+									],
+									"path": [
+										"v1",
+										"characters",
+										"1339",
+										"images"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "-1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.equal(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "random - limit 100",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.equal(20);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?limit=100",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "random - game=false, nsfw=false, western=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array length above 1\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.game).to.be.true;",
+									"    pm.expect(c.nsfw).to.be.false;",
+									"    pm.expect(c.western).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?game=true&nsfw=false&western=true&limit=20",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "true"
+								},
+								{
+									"key": "nsfw",
+									"value": "false"
+								},
+								{
+									"key": "western",
+									"value": "true"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "random  - game=false, nsfw=true, western=false",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.game).to.be.false;",
+									"    pm.expect(c.nsfw).to.be.true;",
+									"    pm.expect(c.western).to.be.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?game=false&nsfw=true&western=false",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "false"
+								},
+								{
+									"key": "nsfw",
+									"value": "true"
+								},
+								{
+									"key": "western",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.game).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?game=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nsfw=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.nsfw).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?nsfw=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "nsfw",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "western=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.western).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?western=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "western",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/?name=Kurisu&limit=20",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Kurisu"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "name parameter needed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expected = 'Must have a valid name query parameter'",
+									"    var message = jsonData.message;",
+									"    pm.expect(message).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - bad (not string) id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var message = jsonData.message;",
+									"    var expected = \"Must have a valid id parameter\"",
+									"",
+									"    pm.expect(message).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/test/",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"test",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var id = jsonData.id;",
+									"    var expected = 1234",
+									"",
+									"    pm.expect(id).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/420",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"420"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "images",
+			"item": [
+				{
+					"name": "id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"ID is 187840\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expected = 187840;",
+									"    var id = jsonData.id;",
+									"    ",
+									"",
+									"    pm.expect(id).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/images/187840",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"images",
+								"187840"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Validate message', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var message = jsonData.message;",
+									"    var expected = \"Must have a valid id parameter\";",
+									"",
+									"    pm.expect(message).to.be.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/images/hahaha",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"images",
+								"hahaha"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id invalid not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test('Validate message', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var message = jsonData.message;",
+									"    var expected = \"Image not found with id 99999999999\";",
+									"",
+									"    pm.expect(message).to.be.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/images/99999999999",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"images",
+								"99999999999"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "series",
+			"item": [
+				{
+					"name": "random - limit 100",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.equal(20);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/random?limit=100",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"random"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game=false, nsfw=false, western=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Validate query params\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expectedGame = false;",
+									"    var expectedNSFW = false;",
+									"    var expectedWestern = true;",
+									"",
+									"    jsonData.forEach(series => {",
+									"        pm.expect(series.western).to.be.equal(expectedWestern);",
+									"        pm.expect(series.game).to.be.equal(expectedGame);",
+									"        pm.expect(series.nsfw).to.be.equal(expectedNSFW);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?game=false&nsfw=false&western=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "false"
+								},
+								{
+									"key": "nsfw",
+									"value": "false"
+								},
+								{
+									"key": "western",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game=false, nsfw=true, western=false",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Validate query params\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expectedGame = false;",
+									"    var expectedNSFW = true;",
+									"    var expectedWestern = false;",
+									"",
+									"    jsonData.forEach(series => {",
+									"        pm.expect(series.western).to.be.equal(expectedWestern);",
+									"        pm.expect(series.game).to.be.equal(expectedGame);",
+									"        pm.expect(series.nsfw).to.be.equal(expectedNSFW);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?game=false&nsfw=true&western=false",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "false"
+								},
+								{
+									"key": "nsfw",
+									"value": "true"
+								},
+								{
+									"key": "western",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.game).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?game=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							],
+							"query": [
+								{
+									"key": "game",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nsfw=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.nsfw).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?nsfw=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							],
+							"query": [
+								{
+									"key": "nsfw",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "western=true",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var c = jsonData[0];",
+									"",
+									"    pm.expect(c.nsfw).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?nsfw=true",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							],
+							"query": [
+								{
+									"key": "nsfw",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/?name=stei&limit=20",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "stei"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "name parameter needed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Validate properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expected = 'Must have a valid name query parameter'",
+									"    var message = jsonData.message;",
+									"    pm.expect(message).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var id = jsonData.id;",
+									"    var expected = 102",
+									"",
+									"    pm.expect(id).to.equal(expected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/102",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"102"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/series/random",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"series",
+								"random"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search",
+			"item": [
+				{
+					"name": "search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var characters = jsonData.characters;",
+									"    var series = jsonData.series;",
+									"",
+									"    pm.expect(characters.length).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/search?name=kat&limit=5&nsfw=false",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "kat"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "nsfw",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
