@@ -9,7 +9,7 @@ import "github.com/jgoralcz/cdbapi/src/server"
 // @termsOfService http://swagger.io/terms/
 // @contact.name jgoralcz
 // @contact.url https://github.com/jgoralcz/cdbapi
-// @BasePath /api/v1
+// @BasePath /v1
 func main() {
 	server.Run()
 }

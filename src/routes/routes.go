@@ -17,7 +17,7 @@ func Routes() *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	v1 := e.Group("/api/v1")
+	v1 := e.Group("/v1")
 	{
 		characters := v1.Group("/characters")
 		{
