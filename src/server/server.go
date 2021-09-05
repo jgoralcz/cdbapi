@@ -13,7 +13,7 @@ import (
 	"github.com/jgoralcz/cdbapi/src/routes"
 )
 
-// Run initializes the http server with the gin framework.
+// Run initializes the http server with the echo framework.
 func Run() {
 	echo := routes.Routes()
 

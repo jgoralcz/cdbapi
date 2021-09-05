@@ -42,6 +42,10 @@ RUN cp /build/main .
 ############################
 FROM scratch
 
+LABEL owner = jgoralcz
+LABEL serviceVersion = 1.0.0
+LABEL description = "Golang Character Database"
+
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group

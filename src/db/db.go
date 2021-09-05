@@ -27,7 +27,7 @@ var pool *pgxpool.Pool
 
 func init() {
 	var dbConfig dbConfig
-	helpers.MarshalJSONFile("/Users/Josh/Documents/GitHub/cdbapi/api.json", &dbConfig)
+	helpers.MarshalJSONFile("/usr/go/api.json", &dbConfig)
 
 	parsedURL := generateParsedURLFromConfig(dbConfig)
 
@@ -52,7 +52,7 @@ func generateParsedURLFromConfig(dbConfig dbConfig) string {
 		"&pool_max_conn_lifetime=" + strconv.Itoa(dbConfig.ConnectionTimeoutMillis) + "ms&pool_max_conn_idle_time=" + strconv.Itoa(dbConfig.IdleTimeoutMillis) + "ms"
 }
 
-// PoolQueryRows queries the database pool and retreives multiple rows.
+// PoolQueryRows queries the database pool and retrieves multiple rows.
 func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
 	rows, err := pool.Query(context.Background(), statement, params...)
 	if err != nil {
@@ -62,7 +62,7 @@ func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
 	return rows
 }
 
-// PoolQueryRow queries the database pool and retreives a single row.
+// PoolQueryRow queries the database pool and retrieves a single row.
 func PoolQueryRow(statement string, params ...interface{}) pgx.Row {
 	return pool.QueryRow(context.Background(), statement, params...)
 }

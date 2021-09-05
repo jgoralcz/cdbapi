@@ -8,7 +8,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// Routes is a function that binds with http to handle particular routes
+// Routes is a function that binds with http to handle particular routes.
 // It also includes special middleware when a panic occurs and logging each request.
 func Routes() *echo.Echo {
 	e := echo.New()
