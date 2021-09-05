@@ -1,7 +1,7 @@
 package characters
 
 var characterSearch = `
-SELECT id, name, description image_url, image_url_clean AS image_url_crop, nsfw, "seriesNsfw",
+SELECT id, name, description, image_url, image_url_clean AS image_url_crop, nsfw, "seriesNsfw",
 	is_game AS game, is_western AS western, series, series_id, age, date_of_birth, hip_cm,
 	bust_cm, weight_kg, height_cm, blood_type,
 	(

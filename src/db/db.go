@@ -39,7 +39,7 @@ func init() {
 		os.Exit(1)
 	}
 
-	log.Printf("%s", dbConfig.User)
+	log.Printf("db user %s logged in", dbConfig.User)
 }
 
 func generateParsedURLFromConfig(dbConfig dbConfig) string {

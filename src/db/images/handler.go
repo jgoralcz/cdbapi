@@ -27,9 +27,16 @@ func handleRow(row pgx.Row) string {
 	i := new(Image)
 
 	err := row.Scan(
-		&i.ID, &i.CharacterID, &i.ImageURL, &i.ImageURLCrop, &i.Nsfw,
-		&i.Width, &i.Height, &i.FileType,
-		&i.BufferSize, &i.BufferSizeCrop,
+		&i.ID,
+		&i.CharacterID,
+		&i.ImageURL,
+		&i.ImageURLCrop,
+		&i.Nsfw,
+		&i.Width,
+		&i.Height,
+		&i.FileType,
+		&i.BufferSize,
+		&i.BufferSizeCrop,
 	)
 
 	if err != nil && err != sql.ErrNoRows {
