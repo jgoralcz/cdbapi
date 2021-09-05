@@ -11,11 +11,16 @@ LABEL description = "Golang Character Database but the container is big and has 
 
 WORKDIR /build
 
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
+# COPY go.mod .
+# COPY go.sum .
 
 COPY . .
+RUN go mod download
+
+# docs
+RUN go get -u github.com/swaggo/swag/cmd/swag
+RUN go get -u github.com/swaggo/echo-swagger
+RUN swag init
 
 RUN go build -o main .
 
