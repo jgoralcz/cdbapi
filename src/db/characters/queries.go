@@ -2,7 +2,7 @@ package characters
 
 var characterSearchShort = `
 SELECT wt.id, name, description, image_url, image_url_clean,
-	nsfw, series, series_id, husbando,
+	nsfw, is_game, is_western, series, series_id, husbando,
 	count, position, last_edit_by, last_edit_date,
 	nicknames, spoiler_nicknames,
 	( 
@@ -32,7 +32,7 @@ FROM (
 				ELSE wsst.nsfw
 			END
 	) AS nsfw, wsst.name AS series, series_id, husbando, t1.image_url, t1.image_url_clean_discord,
-		t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date,
+		t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, wsst.is_western, wsst.is_game,
 		COALESCE(array_remove(array_agg(DISTINCT(wscn.nickname)), NULL), '{}') AS nicknames,
 		COALESCE(array_remove(array_agg(DISTINCT(CASE WHEN wscn.is_spoiler = TRUE THEN wscn.nickname ELSE NULL END)), NULL), '{}') AS spoiler_nicknames,
 		count, position
@@ -90,7 +90,7 @@ FROM (
 		OR ('true' = $5 AND wsst.is_game = TRUE)
 		OR wsst.is_game IS NOT NULL
 	)
-	GROUP BY t1.name, t1.series_id, t1.nsfw, wsst.name, wsst.nsfw, husbando, t1.image_url, t1.image_url_clean_discord, t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, count, position
+	GROUP BY t1.name, t1.series_id, t1.nsfw, wsst.name, wsst.nsfw, wsst.is_western, wsst.is_game, husbando, t1.image_url, t1.image_url_clean_discord, t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, count, position
 ) wt
 ORDER BY
 	CASE
@@ -104,7 +104,7 @@ LIMIT $2;
 
 var characterSearch = `
 SELECT wt.id, name, description, image_url, image_url_clean,
-	nsfw, series, series_id, husbando,
+	nsfw, is_game, is_western, series, series_id, husbando,
 	count, position, last_edit_by, last_edit_date,
 	nicknames, spoiler_nicknames,
 	( 
@@ -134,7 +134,7 @@ FROM (
 				ELSE wsst.nsfw
 			END
 	) AS nsfw, wsst.name AS series, series_id, husbando, t1.image_url, t1.image_url_clean_discord,
-		t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date,
+		t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, wsst.is_game, wsst.is_western,
 		COALESCE(array_remove(array_agg(DISTINCT(wscn.nickname)), NULL), '{}') AS nicknames,
 		COALESCE(array_remove(array_agg(DISTINCT(CASE WHEN wscn.is_spoiler = TRUE THEN wscn.nickname ELSE NULL END)), NULL), '{}') AS spoiler_nicknames,
 		count, position
@@ -211,7 +211,7 @@ FROM (
 		OR ('true' = $5 AND wsst.is_game = TRUE)
 		OR wsst.is_game IS NOT NULL
 	)
-	GROUP BY t1.name, t1.series_id, t1.nsfw, wsst.name, wsst.nsfw, husbando, t1.image_url, t1.image_url_clean_discord, t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, count, position
+	GROUP BY t1.name, t1.series_id, t1.nsfw, wsst.name, wsst.nsfw, wsst.is_game, wsst.is_western, husbando, t1.image_url, t1.image_url_clean_discord, t1.image_url_clean, t1.description, t1.id, t1.last_edit_by, t1.last_edit_date, count, position
 ) wt
 ORDER BY
 	CASE
@@ -226,7 +226,7 @@ LIMIT $2;
 var characterRandom = `
 SELECT *
 FROM (
-	SELECT wt.id, name, description, image_url, image_url_clean, nsfw, 
+	SELECT wt.id, name, description, image_url, image_url_clean, nsfw, is_game, is_western,
 	series, series_id, husbando, count, position, last_edit_by, last_edit_date,
 	COALESCE(array_remove(array_agg(DISTINCT(wscn.nickname)), NULL), '{}') AS nicknames,
 	COALESCE(array_remove(array_agg(DISTINCT(CASE WHEN wscn.is_spoiler = TRUE THEN wscn.nickname ELSE NULL END)), NULL), '{}') AS spoiler_nicknames,
@@ -256,7 +256,7 @@ FROM (
 			CASE ws.nsfw WHEN TRUE then TRUE
 				ELSE wsst.nsfw
 			END
-		) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando,
+		) AS nsfw, wsst.is_game, wsst.is_western, wsst.name AS series, wsst.id AS series_id, ws.husbando,
 		ws.image_url, ws.image_url_clean_discord, ws.image_url_clean, ws.description,
 		ws.id, ws.last_edit_by, ws.last_edit_date, count, position
 		
@@ -295,7 +295,7 @@ FROM (
 		LIMIT 1000
 	) wt
 	LEFT JOIN waifu_schema.character_nicknames wscn ON wscn.character_id = wt.id
-	GROUP BY wt.id, name, nsfw, series, series_id, husbando, image_url, image_url_clean_discord,
+	GROUP BY wt.id, name, nsfw, is_game, is_western, series, series_id, husbando, image_url, image_url_clean_discord,
 	image_url_clean, description, last_edit_by, last_edit_date, count, position
 ) t1
 ORDER BY random()
@@ -303,7 +303,7 @@ LIMIT $1;
 `
 
 var characterByID = `
-SELECT wt.id, name, description, image_url, image_url_clean, nsfw, 
+SELECT wt.id, name, description, image_url, image_url_clean, nsfw, is_game, is_western,
 	series, series_id, husbando, count, position, last_edit_by, last_edit_date,
 	COALESCE(array_remove(array_agg(DISTINCT(wscn.nickname)), NULL), '{}') AS nicknames,
 	COALESCE(array_remove(array_agg(DISTINCT(CASE WHEN wscn.is_spoiler = TRUE THEN wscn.nickname ELSE NULL END)), NULL), '{}') AS spoiler_nicknames,
@@ -333,7 +333,7 @@ FROM (
 			CASE ws.nsfw WHEN TRUE then TRUE
 				ELSE wsst.nsfw
 			END
-	) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando,
+	) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando, wsst.is_game, wsst.is_western,
 	ws.image_url, ws.image_url_clean_discord, ws.image_url_clean, ws.description,
 	ws.id, ws.last_edit_by, ws.last_edit_date, count, position
 	
@@ -343,13 +343,13 @@ FROM (
 	WHERE ws.id = $1
 ) wt
 LEFT JOIN waifu_schema.character_nicknames wscn ON wscn.character_id = wt.id
-GROUP BY wt.id, name, nsfw, series, series_id, husbando, image_url, image_url_clean_discord,
+GROUP BY wt.id, name, nsfw, is_game, is_western, series, series_id, husbando, image_url, image_url_clean_discord,
 image_url_clean, description, last_edit_by, last_edit_date, count, position;
 `
 
 var charactersBySeries = `
 SELECT wt.id, name, description, image_url, image_url_clean,
-	nsfw, series, series_id, husbando,
+	nsfw, is_game, is_western, series, series_id, husbando,
 	count, position, last_edit_by, last_edit_date,
 	nicknames, spoiler_nicknames,
 	( 
@@ -373,7 +373,7 @@ SELECT wt.id, name, description, image_url, image_url_clean,
 		) item
 	) AS appears_in
   FROM (
-    SELECT name, nsfw, series, husbando, image_url, image_url_clean_discord, w.series_id,
+    SELECT name, nsfw, is_game, is_western, series, husbando, image_url, image_url_clean_discord, w.series_id,
       image_url_clean, description, w.id, last_edit_by, last_edit_date, count, position,
       COALESCE(array_remove(array_agg(DISTINCT(wscn.nickname)), NULL), '{}') AS nicknames,
       COALESCE(array_remove(array_agg(DISTINCT(CASE WHEN wscn.is_spoiler = TRUE THEN wscn.nickname ELSE NULL END)), NULL), '{}') AS spoiler_nicknames,
@@ -384,11 +384,11 @@ SELECT wt.id, name, description, image_url, image_url_clean,
           CASE ws.nsfw WHEN TRUE then TRUE
             ELSE wsst.nsfw
           END
-      ) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando,
+      ) AS nsfw, wsst.is_game, wsst.is_western, wsst.name AS series, wsst.id AS series_id, ws.husbando,
         ws.image_url, ws.image_url_clean_discord, ws.image_url_clean, ws.description,
         ws.id, ws.last_edit_by, ws.last_edit_date, wsst.nickname
       FROM (
-        SELECT wsst.id, name, nsfw, wssn.nickname
+        SELECT wsst.id, wsst.is_game, wsst.is_western, name, nsfw, wssn.nickname
         FROM (
           SELECT wsst.id
           FROM waifu_schema.series_table wsst
@@ -420,11 +420,11 @@ SELECT wt.id, name, description, image_url, image_url_clean,
           CASE ws.nsfw WHEN TRUE then TRUE
             ELSE wsst.nsfw
           END
-      ) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando,
+      ) AS nsfw, wsst.is_game, wsst.is_western, wsst.name AS series, wsst.id AS series_id, ws.husbando,
         ws.image_url, ws.image_url_clean_discord, ws.image_url_clean, ws.description,
         ws.id, ws.last_edit_by, ws.last_edit_date, wsst.nickname
         FROM (
-          SELECT wsst.id, name, nsfw, wssn.nickname
+          SELECT wsst.id, wsst.is_game, wsst.is_western, name, nsfw, wssn.nickname
           FROM (
             SELECT wsst.id
             FROM waifu_schema.series_table wsst
@@ -460,11 +460,11 @@ SELECT wt.id, name, description, image_url, image_url_clean,
           CASE ws.nsfw WHEN TRUE then TRUE
             ELSE wsst.nsfw
           END
-      ) AS nsfw, wsst.name AS series, wsst.id AS series_id, ws.husbando,
+      ) AS nsfw, wsst.is_game, wsst.is_western, wsst.name AS series, wsst.id AS series_id, ws.husbando,
         ws.image_url, ws.image_url_clean_discord, ws.image_url_clean, ws.description,
         ws.id, ws.last_edit_by, ws.last_edit_date, wsst.nickname
       FROM (
-        SELECT wsst.id, name, nsfw, wssn.nickname
+        SELECT wsst.id, wsst.is_game, wsst.is_western, name, nsfw, wssn.nickname
         FROM (
           SELECT wsst.id
           FROM waifu_schema.series_table wsst
@@ -506,7 +506,7 @@ SELECT wt.id, name, description, image_url, image_url_clean,
     ) w
     LEFT JOIN mv_rank_claim_waifu mv ON mv.waifu_id = w.id
     LEFT JOIN waifu_schema.character_nicknames wscn ON wscn.character_id = w.id
-    GROUP BY name, nsfw, series, series_id, husbando, image_url, image_url_clean_discord,
+    GROUP BY name, nsfw, is_game, is_western, series, series_id, husbando, image_url, image_url_clean_discord,
       image_url_clean, description, w.id, last_edit_by, last_edit_date, count, position
   ) wt
   ORDER BY

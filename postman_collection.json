@@ -1309,6 +1309,80 @@
 					"response": []
 				},
 				{
+					"name": "name short",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/?name=2b&limit=20",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "2b"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "name",
 					"event": [
 						{
@@ -1359,7 +1433,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BONGO_IO_URL}}/v1/characters/?name=Kurisu&limit=20",
+							"raw": "{{BONGO_IO_URL}}/v1/characters/?name=Darios&limit=20",
 							"host": [
 								"{{BONGO_IO_URL}}"
 							],
@@ -1371,7 +1445,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Kurisu"
+									"value": "Darios"
 								},
 								{
 									"key": "limit",
@@ -1395,7 +1469,7 @@
 									"",
 									"pm.test('Validate properties', function () {",
 									"    var jsonData = pm.response.json();",
-									"    var expected = 'Must have a valid name query parameter'",
+									"    var expected = 'Must have a valid name or series query parameter'",
 									"    var message = jsonData.message;",
 									"    pm.expect(message).to.equal(expected);",
 									"});"
@@ -1530,7 +1604,7 @@
 									"pm.test(\"message\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    var id = jsonData.id;",
-									"    var expected = 1234",
+									"    var expected = 420",
 									"",
 									"    pm.expect(id).to.equal(expected);",
 									"});"
@@ -1578,6 +1652,84 @@
 								"v1",
 								"characters",
 								"420"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "by series",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/?series=fire&limit=20&offset=40",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								""
+							],
+							"query": [
+								{
+									"key": "series",
+									"value": "fire"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "40"
+								}
 							]
 						}
 					},
@@ -1830,13 +1982,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BONGO_IO_URL}}/v1/characters/random?limit=100",
+							"raw": "{{BONGO_IO_URL}}/v1/series/random?limit=100",
 							"host": [
 								"{{BONGO_IO_URL}}"
 							],
 							"path": [
 								"v1",
-								"characters",
+								"series",
 								"random"
 							],
 							"query": [
@@ -2490,89 +2642,22 @@
 			]
 		},
 		{
-			"name": "search",
-			"item": [
-				{
-					"name": "search",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"message\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    var characters = jsonData.characters;",
-									"    var series = jsonData.series;",
-									"",
-									"    pm.expect(characters.length).to.be.above(0);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
+			"name": "healthz",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BONGO_IO_URL}}/healthz/",
+					"host": [
+						"{{BONGO_IO_URL}}"
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"test\": \"Hell\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BONGO_IO_URL}}/v1/search?name=kat&limit=5&nsfw=false",
-							"host": [
-								"{{BONGO_IO_URL}}"
-							],
-							"path": [
-								"v1",
-								"search"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "kat"
-								},
-								{
-									"key": "limit",
-									"value": "5"
-								},
-								{
-									"key": "nsfw",
-									"value": "false"
-								}
-							]
-						}
-					},
-					"response": []
+					"path": [
+						"healthz",
+						""
+					]
 				}
-			]
+			},
+			"response": []
 		}
 	],
 	"event": [

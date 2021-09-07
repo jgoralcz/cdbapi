@@ -18,6 +18,8 @@ type Character struct {
 	ImageURL         null.String `json:"image_url" swaggertype:"string" example:"https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"`
 	ImageURLCrop     null.String `json:"image_url_crop" swaggertype:"string" example:"https://cdn.bongo.best/characters/7960/82736d1f-fa95-4f6e-ae78-f9422f065202_thumb.png"`
 	Nsfw             null.Bool   `json:"nsfw" swaggertype:"boolean" example:"false"`
+	Game             null.Bool   `json:"game" swaggertype:"boolean" example:"false"`
+	Western          null.Bool   `json:"western" swaggertype:"boolean" example:"false"`
 	Series           string      `json:"series" swaggertype:"string" example:"Persona 4"`
 	SeriesID         int         `json:"series_id" example:"2240"`
 	Husbando         null.Bool   `json:"husbando" swaggertype:"boolean" nullable:"true" example:"false"`
@@ -66,6 +68,8 @@ func handleRows(rows pgx.Rows) string {
 			&c.ImageURL,
 			&c.ImageURLCrop,
 			&c.Nsfw,
+			&c.Game,
+			&c.Western,
 			&c.Series,
 			&c.SeriesID,
 			&c.Husbando,
@@ -113,6 +117,8 @@ func handleRow(row pgx.Row) string {
 		&c.ImageURL,
 		&c.ImageURLCrop,
 		&c.Nsfw,
+		&c.Game,
+		&c.Western,
 		&c.Series,
 		&c.SeriesID,
 		&c.Husbando,
