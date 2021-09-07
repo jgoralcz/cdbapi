@@ -38,7 +38,6 @@ func Routes() *echo.Echo {
 			series.GET("/:id", handlers.SeriesByID)
 			series.GET("", handlers.Series)
 		}
-
 	}
 
 	healthz := e.Group("/healthz")

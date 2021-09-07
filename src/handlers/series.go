@@ -18,7 +18,7 @@ import (
 // @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
 // @Failure 404 {object} httputil.HTTPError "Could not find a series with id Some ID"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the series with id Some ID"
-// @Router /series/{id} [get]
+// @Router /v1/series/{id} [get]
 // @Tags Series
 func SeriesByID(c echo.Context) (err error) {
 	strID := c.Param("id")
@@ -38,8 +38,7 @@ func SeriesByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series with id " + strID}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
 
 // SeriesRandom is a handler for echo that gets a random series based off a user's filters.
@@ -52,7 +51,7 @@ func SeriesByID(c echo.Context) (err error) {
 // @Param game query boolean false "whether the series is from a game or not"
 // @Success 200 {array} series.Series
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the series"
-// @Router /series/random [get]
+// @Router /v1/series/random [get]
 // @Tags Series
 func SeriesRandom(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
@@ -71,8 +70,7 @@ func SeriesRandom(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
 
 // Series is a handler for echo that gets the series metadata based off the name and user's filters.
@@ -87,7 +85,7 @@ func SeriesRandom(c echo.Context) (err error) {
 // @Success 200 {array} series.Series
 // @Failure 400 {object} httputil.HTTPError "Must have a valid name query parameter"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the series"
-// @Router /series [get]
+// @Router /v1/series [get]
 // @Tags Series
 func Series(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
@@ -111,6 +109,5 @@ func Series(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
 	return c.String(200, json)
 }

@@ -18,7 +18,7 @@ import (
 // @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
 // @Failure 404 {object} httputil.HTTPError "Could not find a character with id Some ID"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character with id Some ID"
-// @Router /characters/{id} [get]\
+// @Router /v1/characters/{id} [get]
 // @Tags Character
 func CharacterByID(c echo.Context) (err error) {
 	strID := c.Param("id")
@@ -38,8 +38,7 @@ func CharacterByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character with id " + strID}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
 
 // CharacterImages is a handler for echo that gets a character's images based off the character ID, offset, and limit.
@@ -56,7 +55,7 @@ func CharacterByID(c echo.Context) (err error) {
 // @Failure 400 {object} httputil.HTTPError "Invalid limit provided. Limit must be a valid number less than 10 and greater than 0"
 // @Failure 400 {object} httputil.HTTPError "Invalid offset provided. Offset must be a valid number and greater than 0"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the images"
-// @Router /characters/{id}/images [get]
+// @Router /v1/characters/{id}/images [get]
 // @Tags Character
 func CharacterImages(c echo.Context) (err error) {
 	strID := c.Param("id")
@@ -92,8 +91,7 @@ func CharacterImages(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
 
 // CharacterRandom is a handler for echo that gets a random character based off a user's filters.
@@ -106,7 +104,7 @@ func CharacterImages(c echo.Context) (err error) {
 // @Param game query boolean false "whether the character is from a game or not"
 // @Success 200 {array} characters.Character
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
-// @Router /characters/random [get]
+// @Router /v1/characters/random [get]
 // @Tags Character
 func CharacterRandom(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
@@ -125,17 +123,16 @@ func CharacterRandom(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
 
 // TODO: how to do name or series required
 // Character is a handler for echo that gets the character metadata based off the name or series and user's filters.
 // @Summary Gets a character based off the user's query parameters.
-// @Description Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
+// @Description Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name or series to get a result back.
 // @Produce json
-// @Param name query string true "name to search"
-// @Param series query string true "series to search by"
+// @Param name query string false "name to search"
+// @Param series query string false "series to search by"
 // @Param limit query int false "limit 1-20; Default 1"
 // @Param nsfw query boolean false "whether the character is nsfw or not"
 // @Param western query boolean false "whether the character is western (Cartoon) or not (Anime)"
@@ -143,7 +140,7 @@ func CharacterRandom(c echo.Context) (err error) {
 // @Success 200 {array} characters.Character
 // @Failure 400 {object} httputil.HTTPError "Must have a valid name or series query parameter"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
-// @Router /characters [get]
+// @Router /v1/characters [get]
 // @Tags Character
 func Character(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
@@ -175,6 +172,5 @@ func Character(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }

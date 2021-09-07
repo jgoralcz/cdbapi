@@ -16,7 +16,7 @@ import (
 // @Failure 400 {object} httputil.HTTPError "Must have a valid id parameter"
 // @Failure 404 {object} httputil.HTTPError "Image not found with id some ID"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the images for the character"
-// @Router /images/{id} [get]
+// @Router /v1/images/{id} [get]
 // @Tags Images
 func ImageByID(c echo.Context) (err error) {
 	strID := c.Param("id")
@@ -36,6 +36,5 @@ func ImageByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
 	}
 
-	c.Response().Header().Set("Content-Type", "application/json")
-	return c.String(200, json)
+	return c.JSON(200, json)
 }
