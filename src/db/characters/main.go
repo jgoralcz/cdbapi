@@ -7,7 +7,15 @@ import (
 // GetSearchCharacter searches for a character based off the user's input for:
 // name, limit (1-20), nsfw (true or false), western (true or false), game (true or false)
 func GetSearchCharacter(name string, limit int, nsfw string, western string, game string) string {
-	rows := db.PoolQueryRows(characterSearch, name, limit, nsfw, western, game)
+	var query string
+
+	if len(name) <= 3 {
+		query = characterSearchShort
+	} else {
+		query = characterSearch
+	}
+
+	rows := db.PoolQueryRows(query, name, limit, nsfw, western, game)
 	return handleRows(rows)
 }
 
@@ -29,4 +37,10 @@ func GetCharacterByID(id int) string {
 func GetCharacterImages(id int, limit int, offset int, nsfw string, crop string) string {
 	rows := db.PoolQueryRows(characterImagesByIDOffsetLimit, id, limit, offset, nsfw, crop)
 	return handleBasicImage(rows)
+}
+
+// GetCharactersBySearchSeries gets character information by series name.
+func GetCharactersBySearchSeries(series string, limit int, offset int) string {
+	rows := db.PoolQueryRows(charactersBySeries, series, limit, offset)
+	return handleRows(rows)
 }

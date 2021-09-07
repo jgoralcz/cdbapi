@@ -3,7 +3,8 @@ package images
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v4"
 	"gopkg.in/guregu/null.v3"
@@ -40,16 +41,18 @@ func handleRow(row pgx.Row) string {
 	)
 
 	if err != nil && err != sql.ErrNoRows {
+		log.Error(err)
 		return "{}"
 	}
 
 	if err != nil {
+		log.Error(err)
 		return ""
 	}
 
 	imagesJSON, marshalErr := json.Marshal(i)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Error(marshalErr)
 		return ""
 	}
 

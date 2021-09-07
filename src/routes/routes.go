@@ -39,10 +39,11 @@ func Routes() *echo.Echo {
 			series.GET("", handlers.Series)
 		}
 
-		search := v1.Group("/search")
-		{
-			search.GET("", handlers.Search)
-		}
+	}
+
+	healthz := e.Group("/healthz")
+	{
+		healthz.GET("", handlers.Healthz)
 	}
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

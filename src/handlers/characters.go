@@ -129,37 +129,47 @@ func CharacterRandom(c echo.Context) (err error) {
 	return c.String(200, json)
 }
 
-// Character is a handler for echo that gets the character metadata based off the name and user's filters.
+// TODO: how to do name or series required
+// Character is a handler for echo that gets the character metadata based off the name or series and user's filters.
 // @Summary Gets a character based off the user's query parameters.
 // @Description Get character metadata by nsfw (boolean), game (boolean), western (boolean), limit (1-20), name (string). You must use name to get a result back.
 // @Produce json
 // @Param name query string true "name to search"
+// @Param series query string true "series to search by"
 // @Param limit query int false "limit 1-20; Default 1"
 // @Param nsfw query boolean false "whether the character is nsfw or not"
 // @Param western query boolean false "whether the character is western (Cartoon) or not (Anime)"
 // @Param game query boolean false "whether the character is from a game or not"
 // @Success 200 {array} characters.Character
-// @Failure 400 {object} httputil.HTTPError "Must have a valid name query parameter"
+// @Failure 400 {object} httputil.HTTPError "Must have a valid name or series query parameter"
 // @Failure 500 {object} httputil.HTTPError "An unexpected error has occurred when retrieving the character"
 // @Router /characters [get]
 // @Tags Character
 func Character(c echo.Context) (err error) {
 	initLimit := c.QueryParam("limit")
+	initOffset := c.QueryParam("offset")
 	nsfw := c.QueryParam("nsfw")
 	western := c.QueryParam("western")
 	game := c.QueryParam("game")
 	name := c.QueryParam("name")
+	series := c.QueryParam("series")
 
 	limit := helpers.MaxLimit(initLimit, 1, 20)
 	isNSFW := helpers.DefaultBoolean(nsfw)
 	isWestern := helpers.DefaultBoolean(western)
 	isGame := helpers.DefaultBoolean(game)
+	offset := helpers.DefaultNumber(initOffset, 0)
 
-	if name == "" {
-		return &echo.HTTPError{Code: 400, Message: "Must have a valid name query parameter"}
+	if name == "" && series == "" {
+		return &echo.HTTPError{Code: 400, Message: "Must have a valid name or series query parameter"}
 	}
 
-	json := characters.GetSearchCharacter(name, limit, isNSFW, isWestern, isGame)
+	var json string
+	if name != "" {
+		json = characters.GetSearchCharacter(name, limit, isNSFW, isWestern, isGame)
+	} else {
+		json = characters.GetCharactersBySearchSeries(series, limit, offset)
+	}
 
 	if json == "" {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}

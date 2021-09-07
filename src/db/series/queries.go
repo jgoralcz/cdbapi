@@ -107,5 +107,3 @@ LEFT JOIN waifu_schema.series_nicknames wssn ON wssn.series_id = wsst.id
 WHERE wsst.id = $1
 GROUP BY wsst.id, wsst.name, description, image_url, release_date, nsfw, is_game, is_western;
 `
-
-// TODO: search for characters by series

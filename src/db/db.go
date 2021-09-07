@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"os"
 	"strconv"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -35,11 +35,10 @@ func init() {
 	pool, err = pgxpool.Connect(context.Background(), parsedURL)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		log.Fatal(os.Stderr, "Unable to connect to database: %v\n", err)
 	}
 
-	log.Printf("db user %s logged in", dbConfig.User)
+	log.Info("db user %s logged in", dbConfig.User)
 }
 
 func generateParsedURLFromConfig(dbConfig dbConfig) string {
@@ -56,7 +55,7 @@ func generateParsedURLFromConfig(dbConfig dbConfig) string {
 func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
 	rows, err := pool.Query(context.Background(), statement, params...)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return nil
 	}
 	return rows

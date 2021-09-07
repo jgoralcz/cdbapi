@@ -2,12 +2,13 @@ package server
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 	"github.com/jgoralcz/cdbapi/src/routes"
@@ -25,10 +26,11 @@ func Run() {
 		Addr:         addr,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  20 * time.Second,
 	}
 
 	go func() {
-		log.Printf("Starting %s Server on port %s", env, port)
+		log.Info("Starting %s Server on port %s", env, port)
 		echo.Logger.Fatal(echo.StartServer(server))
 	}()
 
@@ -47,6 +49,5 @@ func waitForShutdown(srv *http.Server) {
 	defer cancel()
 	srv.Shutdown(ctx)
 
-	log.Println("Shutting down")
-	os.Exit(0)
+	log.Fatal("Shutting down...")
 }

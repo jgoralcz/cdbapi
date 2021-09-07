@@ -3,7 +3,8 @@ package series
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v4"
 	"gopkg.in/guregu/null.v3"
@@ -42,7 +43,7 @@ func handleRows(rows pgx.Rows) string {
 			&s.Nicknames,
 		)
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
 			break
 		}
 
@@ -51,13 +52,13 @@ func handleRows(rows pgx.Rows) string {
 
 	seriesJSON, marshalErr := json.Marshal(series)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Error(marshalErr)
 		return ""
 	}
 
 	rowsErr := rows.Err()
 	if rowsErr != nil {
-		log.Println(rowsErr)
+		log.Error(rowsErr)
 		return ""
 	}
 
@@ -79,16 +80,18 @@ func handleRow(row pgx.Row) string {
 	)
 
 	if err != nil && err != sql.ErrNoRows {
+		log.Error(err)
 		return "{}"
 	}
 
 	if err != nil {
+		log.Error(err)
 		return ""
 	}
 
 	seriesJSON, marshalErr := json.Marshal(s)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Error(marshalErr)
 		return ""
 	}
 

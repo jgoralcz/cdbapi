@@ -3,7 +3,8 @@ package helpers
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // MarshalJSONFile takes in a filename path and struct reference to
@@ -13,8 +14,8 @@ func MarshalJSONFile(filename string, structRef interface{}) []byte {
 	err := json.Unmarshal(plan, structRef)
 
 	if err != nil {
-		log.Printf("%s", err)
-		log.Printf("Problem with file: %s", filename)
+		log.Error(err)
+		log.Error("Problem with file: %s", filename)
 		panic(err)
 	}
 

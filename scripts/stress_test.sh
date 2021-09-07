@@ -1,4 +1,7 @@
-# watch -n 1 
+# watch -n 1
+
+# health -- basic echo test
+ab -r -c 100 -n 1000 http://localhost:8443/healthz
 
 # characters
 ab -r -c 50 -n 500 http://localhost:8443/v1/characters/random
