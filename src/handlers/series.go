@@ -28,13 +28,13 @@ func SeriesByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
 	}
 
-	json := series.GetSeriesByID(id)
+	json, err := series.GetSeriesByID(id)
 
-	if json == "{}" {
+	if json == nil {
 		return &echo.HTTPError{Code: 404, Message: "Could not find a series with id " + strID}
 	}
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series with id " + strID}
 	}
 
@@ -64,9 +64,9 @@ func SeriesRandom(c echo.Context) (err error) {
 	isWestern := helpers.DefaultBoolean(western)
 	isGame := helpers.DefaultBoolean(game)
 
-	json := series.GetRandomSeries(limit, isNSFW, isWestern, isGame)
+	json, err := series.GetRandomSeries(limit, isNSFW, isWestern, isGame)
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series"}
 	}
 
@@ -103,11 +103,11 @@ func Series(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid name query parameter"}
 	}
 
-	json := series.GetSearchSeries(name, limit, isNSFW, isWestern, isGame)
+	json, err := series.GetSearchSeries(name, limit, isNSFW, isWestern, isGame)
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the series"}
 	}
 
-	return c.String(200, json)
+	return c.JSON(200, json)
 }

@@ -2,7 +2,6 @@ package images
 
 import (
 	"database/sql"
-	"encoding/json"
 
 	log "github.com/sirupsen/logrus"
 
@@ -24,7 +23,7 @@ type Image struct {
 	BufferSizeCrop null.Int    `json:"buffer_size_crop" swaggertype:"number" example:"72288"`
 }
 
-func handleRow(row pgx.Row) string {
+func handleRow(row pgx.Row) (*Image, error) {
 	i := new(Image)
 
 	err := row.Scan(
@@ -42,19 +41,13 @@ func handleRow(row pgx.Row) string {
 
 	if err != nil && err != sql.ErrNoRows {
 		log.Error(err)
-		return "{}"
+		return nil, err
 	}
 
 	if err != nil {
 		log.Error(err)
-		return ""
+		return i, err
 	}
 
-	imagesJSON, marshalErr := json.Marshal(i)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
-	return string(imagesJSON)
+	return i, nil
 }

@@ -28,13 +28,13 @@ func CharacterByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
 	}
 
-	json := characters.GetCharacterByID(id)
+	json, err := characters.GetCharacterByID(id)
 
-	if json == "{}" {
+	if json == nil {
 		return &echo.HTTPError{Code: 404, Message: "Could not find a character with id " + strID}
 	}
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character with id " + strID}
 	}
 
@@ -85,9 +85,9 @@ func CharacterImages(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Invalid offset provided. Offset must be a valid number and greater than 0"}
 	}
 
-	json := characters.GetCharacterImages(id, limit, offset, isNSFW, isCrop)
+	json, err := characters.GetCharacterImages(id, limit, offset, isNSFW, isCrop)
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
 	}
 
@@ -117,9 +117,9 @@ func CharacterRandom(c echo.Context) (err error) {
 	isWestern := helpers.DefaultBoolean(western)
 	isGame := helpers.DefaultBoolean(game)
 
-	json := characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
+	json, err := characters.GetRandomCharacter(limit, isNSFW, isWestern, isGame)
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}
 	}
 
@@ -161,14 +161,14 @@ func Character(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid name or series query parameter"}
 	}
 
-	var json string
+	var json []characters.Character
 	if name != "" {
-		json = characters.GetSearchCharacter(name, limit, isNSFW, isWestern, isGame)
+		json, err = characters.GetSearchCharacter(name, limit, isNSFW, isWestern, isGame)
 	} else {
-		json = characters.GetCharactersBySearchSeries(series, limit, offset)
+		json, err = characters.GetCharactersBySearchSeries(series, limit, offset)
 	}
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the character"}
 	}
 

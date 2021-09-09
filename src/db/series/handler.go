@@ -2,7 +2,6 @@ package series
 
 import (
 	"database/sql"
-	"encoding/json"
 
 	log "github.com/sirupsen/logrus"
 
@@ -23,12 +22,9 @@ type Series struct {
 	Nicknames   []string    `json:"nicknames"`
 }
 
-func handleRows(rows pgx.Rows) string {
-	if rows == nil {
-		return "[]"
-	}
-
+func handleRows(rows pgx.Rows) ([]Series, error) {
 	series := []Series{}
+
 	for rows.Next() {
 		s := new(Series)
 		err := rows.Scan(
@@ -42,31 +38,27 @@ func handleRows(rows pgx.Rows) string {
 			&s.Western,
 			&s.Nicknames,
 		)
+
 		if err != nil {
 			log.Error(err)
-			break
+			return nil, err
 		}
 
 		series = append(series, *s)
 	}
 
-	seriesJSON, marshalErr := json.Marshal(series)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
 	rowsErr := rows.Err()
 	if rowsErr != nil {
 		log.Error(rowsErr)
-		return ""
+		return nil, rowsErr
 	}
 
-	return string(seriesJSON)
+	return series, nil
 }
 
-func handleRow(row pgx.Row) string {
+func handleRow(row pgx.Row) (*Series, error) {
 	s := new(Series)
+
 	err := row.Scan(
 		&s.ID,
 		&s.Name,
@@ -81,19 +73,13 @@ func handleRow(row pgx.Row) string {
 
 	if err != nil && err != sql.ErrNoRows {
 		log.Error(err)
-		return "{}"
+		return nil, err
 	}
 
 	if err != nil {
 		log.Error(err)
-		return ""
+		return s, err
 	}
 
-	seriesJSON, marshalErr := json.Marshal(s)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
-	return string(seriesJSON)
+	return s, nil
 }

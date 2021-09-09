@@ -2,7 +2,6 @@ package characters
 
 import (
 	"database/sql"
-	"encoding/json"
 
 	log "github.com/sirupsen/logrus"
 
@@ -52,11 +51,7 @@ type CharacterImage struct {
 	Nsfw         null.Bool   `json:"nsfw" swaggertype:"boolean" example:"false"`
 }
 
-func handleRows(rows pgx.Rows) string {
-	rowsErr := rows.Err()
-	if rows == nil && rowsErr == nil {
-		return "[]"
-	}
+func handleRows(rows pgx.Rows) ([]Character, error) {
 
 	characters := []Character{}
 	for rows.Next() {
@@ -81,34 +76,24 @@ func handleRows(rows pgx.Rows) string {
 			&c.SpoilerNicknames,
 			&c.AppearsIn,
 		)
-
 		if err != nil {
 			log.Error(err)
-			break
-		}
-
-		if c.AppearsIn == nil {
-			c.AppearsIn = []AppearsIn{}
+			return nil, err
 		}
 
 		characters = append(characters, *c)
 	}
 
-	charactersJSON, marshalErr := json.Marshal(characters)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
+	rowsErr := rows.Err()
 	if rowsErr != nil {
 		log.Error(rowsErr)
-		return ""
+		return nil, rowsErr
 	}
 
-	return string(charactersJSON)
+	return characters, nil
 }
 
-func handleRow(row pgx.Row) string {
+func handleRow(row pgx.Row) (*Character, error) {
 	c := new(Character)
 	err := row.Scan(
 		&c.ID,
@@ -133,55 +118,41 @@ func handleRow(row pgx.Row) string {
 
 	if err != nil && err != sql.ErrNoRows {
 		log.Error(err)
-		return "{}"
+		return nil, err
 	}
 
 	if err != nil {
 		log.Error(err)
-		return ""
+		return c, err
 	}
 
-	if c.AppearsIn == nil {
-		c.AppearsIn = []AppearsIn{}
-	}
-
-	characterJSON, marshalErr := json.Marshal(c)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
-	return string(characterJSON)
+	return c, nil
 }
 
-func handleBasicImage(rows pgx.Rows) string {
-	if rows == nil {
-		return "[]"
-	}
-
+func handleBasicImage(rows pgx.Rows) ([]CharacterImage, error) {
 	images := []CharacterImage{}
 	for rows.Next() {
 		i := new(CharacterImage)
-		err := rows.Scan(&i.CharacterID, &i.ImageID, &i.ImageURL, &i.ImageURLCrop, &i.Nsfw)
+		err := rows.Scan(
+			&i.CharacterID,
+			&i.ImageID,
+			&i.ImageURL,
+			&i.ImageURLCrop,
+			&i.Nsfw,
+		)
 		if err != nil {
 			log.Error(err)
-			break
+			return nil, err
 		}
 
 		images = append(images, *i)
 	}
 
-	imageJSON, marshalErr := json.Marshal(images)
-	if marshalErr != nil {
-		log.Error(marshalErr)
-		return ""
-	}
-
 	rowsErr := rows.Err()
 	if rowsErr != nil {
 		log.Error(rowsErr)
-		return ""
+		return nil, rowsErr
 	}
 
-	return string(imageJSON)
+	return images, nil
 }

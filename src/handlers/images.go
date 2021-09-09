@@ -26,13 +26,13 @@ func ImageByID(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
 	}
 
-	json := images.GetImageByID(id)
+	json, err := images.GetImageByID(id)
 
-	if json == "{}" {
+	if json == nil {
 		return &echo.HTTPError{Code: 404, Message: "Image not found with id " + strID}
 	}
 
-	if json == "" {
+	if err != nil {
 		return &echo.HTTPError{Code: 500, Message: "An unexpected error has occurred when retrieving the images for the character"}
 	}
 
