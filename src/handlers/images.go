@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"strconv"
-
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jgoralcz/cdbapi/src/db/images"
+	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,7 +20,7 @@ import (
 // @Tags Images
 func ImageByID(c echo.Context) (err error) {
 	strID := c.Param("id")
-	id, err := strconv.Atoi(strID)
+	id, err := helpers.NumberOverMax(strID)
 
 	if err != nil {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
@@ -28,7 +28,7 @@ func ImageByID(c echo.Context) (err error) {
 
 	json, err := images.GetImageByID(id)
 
-	if json == nil {
+	if pgxscan.NotFound(err) {
 		return &echo.HTTPError{Code: 404, Message: "Image not found with id " + strID}
 	}
 

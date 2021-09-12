@@ -1,9 +1,13 @@
 package helpers
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 )
+
+var ErrorLessThanZero = errors.New("number is less than 0")
+var ErrorGreaterThanMax = errors.New("number is greater than max")
 
 // MaxLimit receives a user input string and decides whether
 // it is an integer and between the default value and max value.
@@ -14,7 +18,7 @@ func MaxLimit(userLimit string, defaultLimit int, maxLimit int) int {
 		return defaultLimit
 	}
 
-	limit, err := strconv.Atoi(userLimit)
+	limit, err := NumberOverMax(userLimit)
 
 	if err != nil || limit < defaultLimit {
 		return defaultLimit
@@ -43,6 +47,24 @@ func DefaultBoolean(userBool string) string {
 	return lowerStr
 }
 
+func NumberOverMax(value string) (int, error) {
+	num, err := strconv.Atoi(value)
+
+	if err != nil {
+		return -1, err
+	}
+
+	if num < 0 {
+		return -1, ErrorLessThanZero
+	}
+
+	if num >= 2_147_483_647 {
+		return -1, ErrorGreaterThanMax
+	}
+
+	return num, nil
+}
+
 // DefaultNumber receives a value and defaultValue. When the value is an empty string,
 // the default int is used. When the value cannot be converted, -1 is returned.
 // Otherwise the parsed string is converted to an int and returned.
@@ -55,7 +77,7 @@ func DefaultNumber(value string, defaultValue int) int {
 		return defaultValue
 	}
 
-	valueInt, err := strconv.Atoi(value)
+	valueInt, err := NumberOverMax(value)
 	if err != nil {
 		return -1
 	}

@@ -30,7 +30,7 @@ func Run() {
 	}
 
 	go func() {
-		log.Info("Starting %s Server on port %s", env, port)
+		log.Info("Starting ", env, " server on port ", port)
 		echo.Logger.Fatal(echo.StartServer(server))
 	}()
 

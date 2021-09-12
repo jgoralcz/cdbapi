@@ -2,12 +2,11 @@ package db
 
 import (
 	"context"
-	"os"
 	"strconv"
 
+	"github.com/georgysavva/scany/pgxscan"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 )
@@ -35,10 +34,10 @@ func init() {
 	pool, err = pgxpool.Connect(context.Background(), parsedURL)
 
 	if err != nil {
-		log.Fatal(os.Stderr, "Unable to connect to database: %v\n", err)
+		log.Fatal("Unable to connect to database\n", err)
 	}
 
-	log.Info("db user %s logged in", dbConfig.User)
+	log.Info("db user ", dbConfig.User, " logged in")
 }
 
 func generateParsedURLFromConfig(dbConfig dbConfig) string {
@@ -51,17 +50,24 @@ func generateParsedURLFromConfig(dbConfig dbConfig) string {
 		"&pool_max_conn_lifetime=" + strconv.Itoa(dbConfig.ConnectionTimeoutMillis) + "ms&pool_max_conn_idle_time=" + strconv.Itoa(dbConfig.IdleTimeoutMillis) + "ms"
 }
 
-// PoolQueryRows queries the database pool and retrieves multiple rows.
-func PoolQueryRows(statement string, params ...interface{}) pgx.Rows {
-	rows, err := pool.Query(context.Background(), statement, params...)
+func Get(dest interface{}, statement string, params ...interface{}) error {
+	err := pgxscan.Get(context.Background(), pool, dest, statement, params...)
+
 	if err != nil {
 		log.Error(err)
-		return nil
+		return err
 	}
-	return rows
+
+	return nil
 }
 
-// PoolQueryRow queries the database pool and retrieves a single row.
-func PoolQueryRow(statement string, params ...interface{}) pgx.Row {
-	return pool.QueryRow(context.Background(), statement, params...)
+func Select(dest interface{}, statement string, params ...interface{}) error {
+	err := pgxscan.Select(context.Background(), pool, dest, statement, params...)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
 }

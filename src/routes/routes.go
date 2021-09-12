@@ -43,6 +43,7 @@ func Routes() *echo.Echo {
 	healthz := e.Group("/healthz")
 	{
 		healthz.GET("", handlers.Healthz)
+		healthz.GET("/db", handlers.HealthzDb)
 	}
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"strconv"
-
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jgoralcz/cdbapi/src/db/series"
 	"github.com/jgoralcz/cdbapi/src/lib/helpers"
 	_ "github.com/jgoralcz/cdbapi/src/lib/structs" // For Swagger purposes
@@ -22,7 +21,7 @@ import (
 // @Tags Series
 func SeriesByID(c echo.Context) (err error) {
 	strID := c.Param("id")
-	id, err := strconv.Atoi(strID)
+	id, err := helpers.NumberOverMax(strID)
 
 	if err != nil {
 		return &echo.HTTPError{Code: 400, Message: "Must have a valid id parameter"}
@@ -30,7 +29,7 @@ func SeriesByID(c echo.Context) (err error) {
 
 	json, err := series.GetSeriesByID(id)
 
-	if json == nil {
+	if pgxscan.NotFound(err) {
 		return &echo.HTTPError{Code: 404, Message: "Could not find a series with id " + strID}
 	}
 

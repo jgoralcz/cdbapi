@@ -11,7 +11,7 @@ Side Note: Images, characters, and series are updated every day. We could use yo
 <br/>
 <br/>
 
-### local development
+### Local Development
 Create `api.json` like so (change any values you need to...):
 ```js
 {
@@ -29,6 +29,10 @@ Create `api.json` like so (change any values you need to...):
 ```
 docker build -f go.Dockerfile -t go_test . && docker rm -f go_test || true && docker run -d -p 8443:8443 -v $PWD/api.json:/usr/go/api.json --name go_test go_test
 ```
+
+### Unit Testing
+Run the unit test script from the root of the project like so: `./scripts/unit_tests.sh`
+
 
 <br/>
 

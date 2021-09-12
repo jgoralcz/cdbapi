@@ -1658,6 +1658,203 @@
 					"response": []
 				},
 				{
+					"name": "id does not exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/4202565",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"4202565"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id too big",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/999999999999",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								"999999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "by series limit offset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Array with elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"test\": \"Hell\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/v1/characters/?series=fire&limit=20&offset=40",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"v1",
+								"characters",
+								""
+							],
+							"query": [
+								{
+									"key": "series",
+									"value": "fire"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "40"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "by series",
 					"event": [
 						{
@@ -1889,7 +2086,7 @@
 									"pm.test('Validate message', function () {",
 									"    var jsonData = pm.response.json();",
 									"    var message = jsonData.message;",
-									"    var expected = \"Image not found with id 99999999999\";",
+									"    var expected = \"Image not found with id 99999999\";",
 									"",
 									"    pm.expect(message).to.be.equal(expected);",
 									"});"
@@ -1929,14 +2126,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{BONGO_IO_URL}}/v1/images/99999999999",
+							"raw": "{{BONGO_IO_URL}}/v1/images/99999999",
 							"host": [
 								"{{BONGO_IO_URL}}"
 							],
 							"path": [
 								"v1",
 								"images",
-								"99999999999"
+								"99999999"
 							]
 						}
 					},
@@ -2642,22 +2839,45 @@
 			]
 		},
 		{
-			"name": "healthz",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BONGO_IO_URL}}/healthz/",
-					"host": [
-						"{{BONGO_IO_URL}}"
-					],
-					"path": [
-						"healthz",
-						""
-					]
+			"name": "health",
+			"item": [
+				{
+					"name": "healthz",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/healthz/",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"healthz",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "healthz db",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BONGO_IO_URL}}/healthz/",
+							"host": [
+								"{{BONGO_IO_URL}}"
+							],
+							"path": [
+								"healthz",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [

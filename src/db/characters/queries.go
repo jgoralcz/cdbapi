@@ -523,7 +523,7 @@ SELECT wt.id, name, description, image_url, image_url_clean,
 `
 
 var characterImagesByIDOffsetLimit = `
-	SELECT waifu_id, image_id, image_url_path_extra, image_url_clean_path_extra, nsfw
+	SELECT waifu_id AS character_id, image_id, image_url_path_extra, image_url_clean_path_extra, nsfw
 	FROM waifu_schema.waifu_table_images
 	WHERE waifu_id = $1
 		AND (

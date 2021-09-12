@@ -15,7 +15,7 @@ func MarshalJSONFile(filename string, structRef interface{}) []byte {
 
 	if err != nil {
 		log.Error(err)
-		log.Error("Problem with file: %s", filename)
+		log.Error("Problem with file: ", filename)
 		panic(err)
 	}
 

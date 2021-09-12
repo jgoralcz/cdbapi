@@ -15,32 +15,37 @@ func GetSearchCharacter(name string, limit int, nsfw string, western string, gam
 		query = characterSearch
 	}
 
-	rows := db.PoolQueryRows(query, name, limit, nsfw, western, game)
-	return handleRows(rows)
+	var characters = []Character{}
+	err := db.Select(&characters, query, name, limit, nsfw, western, game)
+	return characters, err
+}
+
+// GetCharactersBySearchSeries gets character information by series name.
+func GetCharactersBySearchSeries(series string, limit int, offset int) ([]Character, error) {
+	var characters = []Character{}
+	err := db.Select(&characters, charactersBySeries, series, limit, offset)
+	return characters, err
 }
 
 // GetRandomCharacter retrieves a random character from the database based off the user's input of:
 // limit (1-20), nsfw (true or false), western (true or false), game (true or false)
 // and returns all matching criteria.
 func GetRandomCharacter(limit int, nsfw string, western string, game string) ([]Character, error) {
-	rows := db.PoolQueryRows(characterRandom, limit, nsfw, western, game)
-	return handleRows(rows)
+	var characters = []Character{}
+	err := db.Select(&characters, characterRandom, limit, nsfw, western, game)
+	return characters, err
 }
 
 // GetCharacterByID gets the character information based off the user's input for an ID.
-func GetCharacterByID(id int) (*Character, error) {
-	row := db.PoolQueryRow(characterByID, id)
-	return handleRow(row)
-}
-
-// GetCharactersBySearchSeries gets character information by series name.
-func GetCharactersBySearchSeries(series string, limit int, offset int) ([]Character, error) {
-	rows := db.PoolQueryRows(charactersBySeries, series, limit, offset)
-	return handleRows(rows)
+func GetCharacterByID(id int) (Character, error) {
+	var character = Character{}
+	err := db.Get(&character, characterByID, id)
+	return character, err
 }
 
 // GetCharacterImages gets the basic information on the character images.
 func GetCharacterImages(id int, limit int, offset int, nsfw string, crop string) ([]CharacterImage, error) {
-	rows := db.PoolQueryRows(characterImagesByIDOffsetLimit, id, limit, offset, nsfw, crop)
-	return handleBasicImage(rows)
+	var characterImage = []CharacterImage{}
+	err := db.Select(&characterImage, characterImagesByIDOffsetLimit, id, limit, offset, nsfw, crop)
+	return characterImage, err
 }
