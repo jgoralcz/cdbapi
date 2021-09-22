@@ -1,4 +1,4 @@
-package db
+package helpers
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 func TestGenerateParsedURLFromConfig(t *testing.T) {
 	expected := "postgres://user:pass@host:1234/db?pool_max_conns=5&pool_max_conn_lifetime=5000ms&pool_max_conn_idle_time=2000ms"
 
-	dbConfig := dbConfig{
+	dbConfig := DbConfig{
 		User:                    "user",
 		Host:                    "host",
 		Database:                "db",
@@ -18,7 +18,7 @@ func TestGenerateParsedURLFromConfig(t *testing.T) {
 		Port:                    1234,
 	}
 
-	received := generateParsedURLFromConfig(dbConfig)
+	received := GenerateParsedURLFromConfig(dbConfig)
 
 	if received != expected {
 		t.Errorf("generateParsedURLFromConfig(dbConfig) failed. Expected %v, Received %v", expected, received)
